@@ -3,10 +3,7 @@ import {
   Sprout, 
   Cpu, 
   Droplets, 
-  ShieldCheck, 
-  Globe,
-  Mail,
-  ExternalLink
+  ShieldCheck
 } from 'lucide-react';
 import { StatusBadge } from '../components/Common';
 
@@ -75,30 +72,7 @@ const About: React.FC = () => {
          </div>
       </section>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8 border-t border-black/10 dark:border-white/10 pt-12">
-         <div className="flex items-center gap-6">
-            <div className="w-16 h-16 rounded-2xl bg-black dark:bg-white flex items-center justify-center text-white dark:text-black font-black text-2xl shadow-xl">
-               A
-            </div>
-            <div>
-               <h4 className="font-bold text-lg leading-tight">BlueRoot V1.0</h4>
-               <p className="text-sm text-black/40 dark:text-white/40">Open Source Agri-Tech Initiative</p>
-            </div>
-         </div>
-         <div className="flex items-center gap-4">
-            <button className="p-3 rounded-xl glass border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-all">
-               <Globe size={20} />
-            </button>
-            <button className="p-3 rounded-xl glass border border-black/5 dark:border-white/5 hover:bg-black/5 dark:hover:bg-white/5 transition-all">
-               <Mail size={20} />
-            </button>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm shadow-xl">
-               <Globe size={18} />
-               Live Demo
-               <ExternalLink size={14} />
-            </button>
-         </div>
-      </div>
+
     </div>
   );
 };
