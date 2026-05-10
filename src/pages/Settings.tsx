@@ -149,21 +149,7 @@ const Settings: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5">
-              <div>
-                <p className="font-bold text-slate-800 dark:text-white">Auto-Irrigation Mode</p>
-                <p className="text-sm text-slate-400 dark:text-white/40">Enable automatic control based on thresholds</p>
-              </div>
-              <button 
-                onClick={toggleAutoMode}
-                className={`w-14 h-8 rounded-full relative p-1 transition-colors ${isAutoMode ? 'bg-agri-green' : 'bg-black/10 dark:bg-white/10'}`}
-              >
-                <motion.div 
-                  animate={{ x: isAutoMode ? 24 : 0 }}
-                  className="w-6 h-6 bg-white rounded-full shadow-sm"
-                />
-              </button>
-            </div>
+
           </div>
         </section>
 
