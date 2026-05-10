@@ -52,7 +52,7 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
         glass card-glow rounded-[28px] p-6 relative overflow-hidden
         border ${isWarning
           ? 'border-red-400/40 shadow-[0_0_20px_rgba(239,68,68,0.18)]'
-          : 'border-[#1e9a4e]/30 shadow-[0_0_20px_rgba(30,154,78,0.12)]'}
+          : 'border-[#4caf50]/30 shadow-[0_0_20px_rgba(76,175,80,0.12)]'}
         transition-all duration-300
       `}
     >
@@ -71,7 +71,7 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
             transition={{ delay: 0.3 }}
             className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${
               trendPositive
-                ? 'bg-green-50 text-[#1e9a4e] border-green-100'
+                ? 'bg-green-50 text-[#4caf50] border-green-100'
                 : 'bg-red-50 text-red-500 border-red-100'
             }`}
           >

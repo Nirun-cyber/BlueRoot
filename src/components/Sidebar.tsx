@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { NavLink, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 import { 
   LayoutDashboard, 
   Droplets, 
@@ -9,8 +10,9 @@ import {
   Bell, 
   Settings, 
   Info,
-  Sprout
 } from 'lucide-react';
+import logoLight from '../assets/logo-full.png';
+import logoDark from '../assets/logo-dark.png';
 
 const navItems = [
   { to: '/',             icon: LayoutDashboard, label: 'Dashboard' },
@@ -32,6 +34,7 @@ const itemVariants = {
 };
 
 const Sidebar: React.FC = () => {
+  const { theme } = useTheme();
   return (
     <motion.aside
       variants={sidebarVariants}
@@ -40,19 +43,33 @@ const Sidebar: React.FC = () => {
       className="w-64 h-screen bg-white dark:bg-[#0a0f0c] border-r border-slate-100 dark:border-white/5 flex flex-col sticky top-0 transition-colors duration-300"
     >
       {/* Logo */}
-      <div className="p-6 pb-4 flex items-center gap-3 border-b border-slate-100 dark:border-white/5">
+      <Link to="/" className="p-6 pb-4 flex items-center gap-3 border-b border-slate-100 dark:border-white/5 group hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
         <motion.div
-          whileHover={{ rotate: 15, scale: 1.1 }}
+          whileHover={{ rotate: 5, scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400 }}
-          className="w-10 h-10 bg-[#1e9a4e] rounded-2xl flex items-center justify-center shadow-lg shadow-[#1e9a4e]/30"
+          className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-blue-500/10"
         >
-          <Sprout className="text-white" size={22} />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={theme}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1.5 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+              src={theme === 'dark' ? logoDark : logoLight}
+              alt="BlueRoot Logo"
+              className="w-full h-full object-cover"
+            />
+          </AnimatePresence>
         </motion.div>
         <div>
-          <h1 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">BlueRoot</h1>
-          <p className="text-[9px] font-bold text-[#1e9a4e] uppercase tracking-widest">Smart Farm OS</p>
+          <h1 className="text-lg font-black tracking-tight flex items-center">
+            <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
+            <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
+          </h1>
+          <p className="text-[9px] font-bold text-slate-400 dark:text-white/30 uppercase tracking-widest">Smart Farm OS</p>
         </div>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
@@ -68,7 +85,7 @@ const Sidebar: React.FC = () => {
               className={({ isActive }) => `
                 flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group relative
                 ${isActive
-                  ? 'bg-[#eef9f2] dark:bg-[#1e9a4e]/15 text-[#1e9a4e] font-bold'
+                  ? 'bg-blue-50 dark:bg-blue-500/10 text-[#0073e6] dark:text-[#3b82f6] font-bold'
                   : 'text-slate-500 dark:text-white/50 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5'}
               `}
             >
@@ -78,10 +95,10 @@ const Sidebar: React.FC = () => {
                   {isActive && (
                     <motion.div
                       layoutId="activeBar"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#1e9a4e] rounded-r-full"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0073e6] rounded-r-full"
                     />
                   )}
-                  <item.icon size={18} className={isActive ? 'text-[#1e9a4e]' : 'text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/70 transition-colors'} />
+                  <item.icon size={18} className={isActive ? 'text-[#0073e6]' : 'text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/70 transition-colors'} />
                   <span className="text-sm">{item.label}</span>
                 </>
               )}
@@ -94,7 +111,7 @@ const Sidebar: React.FC = () => {
       <div className="p-4 border-t border-slate-100 dark:border-white/5">
         <p className="px-3 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">Operator Node</p>
         <div className="px-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-[#1e9a4e] flex items-center justify-center text-white font-black text-xs shadow-md shadow-[#1e9a4e]/30">
+          <div className="w-9 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-xs shadow-md shadow-blue-500/30">
             OA
           </div>
           <div>

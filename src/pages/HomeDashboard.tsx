@@ -59,7 +59,7 @@ const HomeDashboard: React.FC = () => {
   const systemStatus = useMemo(() => {
     if (alerts.some(a => a.type === 'error')) return { label: 'Critical', color: 'text-red-500 bg-red-50 border-red-200' };
     if (alerts.some(a => a.type === 'warning')) return { label: 'Warning', color: 'text-amber-500 bg-amber-50 border-amber-200' };
-    return { label: 'All Systems Normal', color: 'text-[#1e9a4e] bg-green-50 border-green-200' };
+    return { label: 'All Systems Normal', color: 'text-[#4caf50] bg-green-50 border-green-200' };
   }, [alerts]);
 
   return (
@@ -70,7 +70,7 @@ const HomeDashboard: React.FC = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
-        className="w-full bg-gradient-to-br from-[#1e9a4e] via-[#17823f] to-[#0f5c2c] rounded-[32px] p-10 relative overflow-hidden shadow-2xl shadow-[#1e9a4e]/30"
+        className="w-full bg-gradient-to-br from-[#0073e6] via-[#005bb5] to-[#4caf50] rounded-[32px] p-10 relative overflow-hidden shadow-2xl shadow-blue-500/20"
       >
         {/* Animated particles */}
         {PARTICLES.map((p, i) => (
@@ -179,12 +179,12 @@ const HomeDashboard: React.FC = () => {
               <p className="text-slate-400 text-xs font-semibold uppercase tracking-widest mt-0.5">Last 24 Hours Analysis</p>
             </div>
             <div className="flex gap-4">
-              {[{ color: 'bg-[#1e9a4e]', label: 'Moisture' }, { color: 'bg-purple-500', label: 'pH' }].map(l => (
+              {[{ color: 'bg-[#0073e6]', label: 'Moisture' }, { color: 'bg-[#4caf50]', label: 'pH' }].map(l => (
                 <span key={l.label} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 dark:text-white/40">
                   <div className={`w-2 h-2 rounded-full ${l.color}`} />{l.label}
                 </span>
               ))}
-              <span className="flex items-center gap-1 text-[10px] font-bold text-[#1e9a4e] bg-green-50 px-2 py-1 rounded-full border border-green-100">
+              <span className="flex items-center gap-1 text-[10px] font-bold text-[#0073e6] bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
                 <TrendingUp size={10} /> Live
               </span>
             </div>
@@ -194,12 +194,12 @@ const HomeDashboard: React.FC = () => {
               <AreaChart data={mockChartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                 <defs>
                   <linearGradient id="colorMoisture" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#1e9a4e" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#1e9a4e" stopOpacity={0} />
+                    <stop offset="5%"  stopColor="#0073e6" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#0073e6" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorPh" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#a855f7" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+                    <stop offset="5%"  stopColor="#4caf50" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#4caf50" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.04)" vertical={false} />
@@ -219,8 +219,8 @@ const HomeDashboard: React.FC = () => {
                   itemStyle={{ color: '#475569' }}
                   cursor={{ stroke: 'rgba(30,154,78,0.2)', strokeWidth: 1 }}
                 />
-                <Area type="monotone" dataKey="moisture" stroke="#1e9a4e" strokeWidth={2.5} fillOpacity={1} fill="url(#colorMoisture)" dot={false} />
-                <Area type="monotone" dataKey="ph" stroke="#a855f7" strokeWidth={2} fillOpacity={1} fill="url(#colorPh)" dot={false} yAxisId={0} />
+                <Area type="monotone" dataKey="moisture" stroke="#0073e6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorMoisture)" dot={false} />
+                <Area type="monotone" dataKey="ph" stroke="#4caf50" strokeWidth={2} fillOpacity={1} fill="url(#colorPh)" dot={false} yAxisId={0} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -266,7 +266,7 @@ const HomeDashboard: React.FC = () => {
             ].map(item => (
               <div key={item.label} className="flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-600 dark:text-white/60">{item.label}</span>
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${item.ok ? 'bg-green-50 text-[#1e9a4e]' : 'bg-red-50 text-red-500'}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${item.ok ? 'bg-green-50 text-[#4caf50]' : 'bg-red-50 text-red-500'}`}>
                   {item.ok ? '✓ OK' : '✗ Alert'}
                 </span>
               </div>

@@ -1,4 +1,6 @@
 import React from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { 
   Bell, 
   Filter, 
@@ -16,6 +18,87 @@ import { StatusBadge } from '../components/Common';
 
 const AlertsLogs: React.FC = () => {
   const { alerts, logs } = useSensors();
+  const [pushNotifications, setPushNotifications] = React.useState(true);
+  const [emailAlerts, setEmailAlerts] = React.useState(true);
+
+  const handleDownloadReport = () => {
+    const doc = new jsPDF();
+    const date = new Date().toLocaleDateString();
+
+    // --- Header & Branding ---
+    doc.setFillColor(0, 115, 230); // BlueRoot Primary Blue
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BlueRoot', 15, 25);
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('SMART FARM OS - ANALYTICS REPORT', 15, 33);
+    
+    doc.text(`Generated: ${date}`, 150, 25);
+    doc.text('System Healthy', 150, 31);
+
+    // --- Section 1: Alert Summary ---
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+    doc.text('1. System Health Summary', 15, 55);
+    
+    const summaryData = [
+      ['Total Errors', alerts.filter(a => a.type === 'error').length],
+      ['Total Warnings', alerts.filter(a => a.type === 'warning').length],
+      ['Total Info Logs', alerts.filter(a => a.type === 'info').length],
+      ['System Uptime', '99.9%'],
+      ['Critical Faults', '0']
+    ];
+
+    (doc as any).autoTable({
+      startY: 65,
+      head: [['Metric', 'Value']],
+      body: summaryData,
+      theme: 'striped',
+      headStyles: { fillColor: [76, 175, 80] }, // BlueRoot Primary Green
+    });
+
+    // --- Section 2: Recent Alerts ---
+    const nextY = (doc as any).lastAutoTable.finalY + 15;
+    doc.text('2. Recent System Alerts', 15, nextY);
+    
+    const alertRows = alerts.map(a => [a.timestamp, a.type.toUpperCase(), a.message]);
+    (doc as any).autoTable({
+      startY: nextY + 10,
+      head: [['Timestamp', 'Type', 'Description']],
+      body: alertRows.length > 0 ? alertRows : [['-', 'No Alerts', 'System is performing optimally.']],
+      theme: 'grid',
+      headStyles: { fillColor: [0, 115, 230] },
+    });
+
+    // --- Section 3: Activity Logs ---
+    const logY = (doc as any).lastAutoTable.finalY + 15;
+    doc.text('3. Detailed Activity Log', 15, logY);
+    
+    const logRows = logs.map(l => [l.timestamp, l.type.toUpperCase(), `Triggered to ${l.action}`]);
+    (doc as any).autoTable({
+      startY: logY + 10,
+      head: [['Timestamp', 'Module', 'Action Taken']],
+      body: logRows.length > 0 ? logRows : [['-', 'No Logs', 'No recent activities recorded.']],
+      theme: 'striped',
+      headStyles: { fillColor: [76, 175, 80] },
+    });
+
+    // --- Footer ---
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`BlueRoot Tech - Futuristic Agriculture Management Platform | Page ${i} of ${pageCount}`, 15, 285);
+    }
+
+    doc.save(`BlueRoot_Monthly_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
 
   const alertIconMap: Record<string, React.ReactNode> = {
     error: <AlertCircle size={20} />,
@@ -41,16 +124,6 @@ const AlertsLogs: React.FC = () => {
             Alerts & Logs
           </h2>
           <p className="text-slate-500 dark:text-white/40 font-medium">Historical record of system events and safety triggers</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="glass px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 border border-[#1e9a4e]/30 text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-            <Filter size={16} />
-            Filter
-          </button>
-          <button className="glass px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 border border-[#1e9a4e]/30 text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
-            <Download size={16} />
-            Export CSV
-          </button>
         </div>
       </div>
 
@@ -131,7 +204,10 @@ const AlertsLogs: React.FC = () => {
             <p className="text-xs text-slate-500 dark:text-white/60 mb-6 leading-relaxed">
               Generate detailed PDF reports of all alerts and activity for the past 30 days.
             </p>
-            <button className="w-full py-3 rounded-xl bg-[#1e9a4e] text-white font-bold text-sm shadow-lg shadow-[#1e9a4e]/20 hover:bg-[#187a3e] transition-all">
+            <button 
+              onClick={handleDownloadReport}
+              className="w-full py-3 rounded-xl bg-[#1e9a4e] text-white font-bold text-sm shadow-lg shadow-[#1e9a4e]/20 hover:bg-[#187a3e] transition-all"
+            >
               Download Monthly Report
             </button>
           </div>
@@ -141,16 +217,17 @@ const AlertsLogs: React.FC = () => {
             <h4 className="font-bold mb-4 text-slate-800 dark:text-white">Notification Settings</h4>
             <div className="space-y-4">
               {[
-                { label: 'Push Notifications', enabled: true },
-                { label: 'Email Alerts', enabled: true },
-                { label: 'Critical Sound', enabled: false },
+                { label: 'Push Notifications', enabled: pushNotifications, toggle: () => setPushNotifications(!pushNotifications) },
+                { label: 'Email Alerts', enabled: emailAlerts, toggle: () => setEmailAlerts(!emailAlerts) },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between py-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-white/70">{item.label}</span>
-                  {item.enabled 
-                    ? <ToggleRight size={28} className="text-[#1e9a4e]" />
-                    : <ToggleLeft size={28} className="text-slate-300 dark:text-white/20" />
-                  }
+                  <button onClick={item.toggle} className="focus:outline-none">
+                    {item.enabled 
+                      ? <ToggleRight size={28} className="text-[#1e9a4e]" />
+                      : <ToggleLeft size={28} className="text-slate-300 dark:text-white/20" />
+                    }
+                  </button>
                 </div>
               ))}
             </div>

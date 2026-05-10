@@ -10,7 +10,9 @@ import {
   MoreVertical,
   X,
   Timer,
-  Trash2
+  Trash2,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import { useSensors } from '../context/SensorContext';
 import { StatusBadge } from '../components/Common';
@@ -25,6 +27,106 @@ interface Schedule {
   timeLeft?: number; // seconds remaining when running
 }
 
+// ------ Custom Time Picker Component ------
+const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [h, m] = value ? value.split(':') : ['00', '00'];
+
+  const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+  const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+
+  const handleSelect = (newH: string, newM: string) => {
+    onChange(`${newH}:${newM}`);
+  };
+
+  return (
+    <div className="relative">
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-3 w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#4caf50] transition-colors"
+      >
+        <Clock size={18} className="text-[#4caf50]" />
+        <span className="text-sm font-mono font-bold text-slate-800 dark:text-white">
+          {h}:{m}
+        </span>
+        <div className="ml-auto flex flex-col items-center justify-center opacity-40 text-slate-400">
+          <ChevronUp size={12} />
+          <ChevronDown size={12} />
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60]"
+              onClick={() => setIsOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl z-[70] p-4 flex gap-4 h-[240px]"
+            >
+              {/* Hours Column */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">Hours</p>
+                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
+                  {hours.map(hour => (
+                    <button
+                      key={hour}
+                      onClick={() => handleSelect(hour, m)}
+                      className={`w-full py-2 rounded-lg text-sm font-mono transition-all ${
+                        hour === h 
+                          ? 'bg-[#4caf50] text-white shadow-lg shadow-green-500/20 scale-105' 
+                          : 'text-slate-500 dark:text-white/40 hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      {hour}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="w-px bg-slate-100 dark:bg-white/5 my-4" />
+
+              {/* Minutes Column */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">Minutes</p>
+                <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
+                  {minutes.map(minute => (
+                    <button
+                      key={minute}
+                      onClick={() => handleSelect(h, minute)}
+                      className={`w-full py-2 rounded-lg text-sm font-mono transition-all ${
+                        minute === m 
+                          ? 'bg-[#4caf50] text-white shadow-lg shadow-green-500/20 scale-105' 
+                          : 'text-slate-500 dark:text-white/40 hover:bg-slate-100 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      {minute}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-[#4caf50] text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl"
+              >
+                Confirm Time
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const FertigationScheduler: React.FC = () => {
   const { data, toggleFertigation } = useSensors();
 
@@ -33,11 +135,7 @@ const FertigationScheduler: React.FC = () => {
 
   // ------ Active cycle countdown (tracks the running schedule) ------
   const [activeTimeLeft, setActiveTimeLeft] = useState(0);
-  const [schedules, setSchedules] = useState<Schedule[]>([
-    { id: 1, name: 'Nitro-Boost Cycle',  time: '08:00', duration: 15, status: 'completed' },
-    { id: 2, name: 'Potassium Mix',       time: '12:30', duration: 10, status: 'running', timeLeft: 480 },
-    { id: 3, name: 'Micronutrient Mix',   time: '16:00', duration: 20, status: 'pending' },
-  ]);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
 
   // ------ New Schedule modal state ------
   const [showModal, setShowModal]   = useState(false);
@@ -152,11 +250,11 @@ const FertigationScheduler: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 className="w-full max-w-md mx-4 pointer-events-auto"
               >
-              <div className="bg-white dark:bg-[#1a1a1a] rounded-[2rem] p-8 border border-purple-200 dark:border-purple-500/30 shadow-2xl shadow-purple-500/10">
+              <div className="bg-white dark:bg-[#1a1a1a] rounded-[2rem] p-8 border border-green-200 dark:border-green-500/30 shadow-2xl shadow-green-500/10">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 text-[#4caf50] flex items-center justify-center">
                       <Timer size={20} />
                     </div>
                     <div>
@@ -190,23 +288,10 @@ const FertigationScheduler: React.FC = () => {
 
                   {/* Start Time */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-white/40">
-                      Start Time <span className="text-red-400">*</span>
-                    </label>
-                    {/* Clickable container opens the native time picker */}
-                    <div
-                      className="relative cursor-pointer"
-                      onClick={() => timeInputRef.current?.showPicker?.()}
-                    >
-                      <Clock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none" />
-                      <input
-                        ref={timeInputRef}
-                        type="time"
-                        value={newTime}
-                        onChange={e => setNewTime(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-purple-400 transition-colors cursor-pointer"
-                      />
-                    </div>
+                    <CustomTimePicker
+                      value={newTime}
+                      onChange={setNewTime}
+                    />
                     <p className="text-[10px] text-slate-400 dark:text-white/30">
                       Motor will auto-start at this time exactly.
                     </p>
@@ -226,7 +311,7 @@ const FertigationScheduler: React.FC = () => {
                         placeholder="e.g. 15"
                         value={newDuration}
                         onChange={e => setNewDuration(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-300 dark:placeholder-white/20 focus:outline-none focus:border-purple-400 transition-colors"
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-300 dark:placeholder-white/20 focus:outline-none focus:border-green-400 transition-colors"
                       />
                     </div>
                     <p className="text-[10px] text-slate-400 dark:text-white/30">
@@ -236,9 +321,9 @@ const FertigationScheduler: React.FC = () => {
 
                   {/* Info box */}
                   {newTime && newDuration && (
-                    <div className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-500/10 rounded-2xl border border-purple-100 dark:border-purple-500/20">
-                      <FlaskConical size={16} className="text-purple-500 mt-0.5 shrink-0" />
-                      <p className="text-xs text-purple-700 dark:text-purple-300 font-medium leading-relaxed">
+                    <div className="flex items-start gap-3 p-4 bg-green-50 dark:bg-green-500/10 rounded-2xl border border-green-100 dark:border-green-500/20">
+                      <FlaskConical size={16} className="text-[#4caf50] mt-0.5 shrink-0" />
+                      <p className="text-xs text-green-700 dark:text-green-300 font-medium leading-relaxed">
                         Fertigation motor will turn <strong>ON</strong> at <strong>{newTime}</strong> and automatically turn <strong>OFF</strong> after <strong>{newDuration} minute{Number(newDuration) !== 1 ? 's' : ''}</strong>.
                       </p>
                     </div>
@@ -256,7 +341,7 @@ const FertigationScheduler: React.FC = () => {
                   <button
                     onClick={handleAddSchedule}
                     disabled={!newTime || !newDuration}
-                    className="flex-1 py-3 rounded-xl bg-purple-500 text-white font-bold text-sm shadow-lg shadow-purple-500/20 hover:bg-purple-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    className="flex-1 py-3 rounded-xl bg-[#4caf50] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:bg-[#388e3c] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
                     Add Schedule
                   </button>
@@ -272,14 +357,14 @@ const FertigationScheduler: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
-            <Calendar size={32} className="text-purple-500" />
+            <Calendar size={32} className="text-[#4caf50]" />
             Fertigation Scheduler
           </h2>
           <p className="text-slate-500 dark:text-white/40 font-medium">Schedule and monitor nutrient distribution</p>
         </div>
         <button
           onClick={handleOpenModal}
-          className="bg-purple-500 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-purple-500/20 flex items-center gap-2 hover:bg-purple-600 transition-all"
+          className="bg-[#4caf50] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-green-500/20 flex items-center gap-2 hover:bg-[#388e3c] transition-all"
         >
           <Plus size={18} />
           New Schedule
@@ -290,78 +375,135 @@ const FertigationScheduler: React.FC = () => {
         {/* ============ LEFT ============ */}
         <div className="lg:col-span-2 space-y-8">
 
-          {/* Active Cycle countdown */}
-          <div className="glass rounded-[2rem] p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
-            <div className="relative shrink-0">
-              <svg className="w-48 h-48 -rotate-90">
-                <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="8" fill="none" className="text-slate-100 dark:text-white/5" />
-                <motion.circle
-                  cx="96" cy="96" r="88"
-                  stroke="#a855f7" strokeWidth="8" fill="none"
-                  strokeDasharray={2 * Math.PI * 88}
-                  animate={{ strokeDashoffset: (2 * Math.PI * 88) * (1 - activeTimeLeft / totalSeconds) }}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Remaining</p>
-                <p className="text-4xl font-bold font-mono text-slate-800 dark:text-white">{formatTime(activeTimeLeft)}</p>
-              </div>
-            </div>
+          {/* Active Cycle Panel */}
+          <div className="glass rounded-[2rem] p-8 border border-slate-100 dark:border-white/5 shadow-2xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden flex flex-col md:flex-row items-center gap-12 min-h-[300px]">
+            {totalRunning ? (
+              <>
+                <div className="relative shrink-0">
+                  <svg className="w-48 h-48 -rotate-90">
+                    <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="8" fill="none" className="text-slate-100 dark:text-white/5" />
+                    <motion.circle
+                      cx="96" cy="96" r="88"
+                      stroke="#4caf50" strokeWidth="8" fill="none"
+                      strokeDasharray={2 * Math.PI * 88}
+                      animate={{ strokeDashoffset: (2 * Math.PI * 88) * (1 - activeTimeLeft / totalSeconds) }}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Remaining</p>
+                    <p className="text-4xl font-bold font-mono text-slate-800 dark:text-white">{formatTime(activeTimeLeft)}</p>
+                  </div>
+                </div>
 
-            <div className="flex-1 space-y-6">
-              <div>
-                <StatusBadge
-                  status={data.fertigationMotor ? 'active' : 'idle'}
-                  label={data.fertigationMotor ? 'Cycle In Progress' : 'System Ready'}
-                />
-                <h3 className="text-2xl font-bold text-slate-800 dark:text-white mt-2">
-                  {totalRunning?.name ?? 'No Active Cycle'}
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
-                  {totalRunning
-                    ? `Running for ${totalRunning.duration} min — motor stops automatically.`
-                    : 'Add a schedule or wait for the next scheduled cycle.'}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Start Time</p>
-                  <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning?.time ?? '—'}</p>
+                <div className="flex-1 space-y-6">
+                  <div>
+                    <StatusBadge
+                      status="active"
+                      label="Cycle In Progress"
+                    />
+                    <h3 className="text-2xl font-bold text-slate-800 dark:text-white mt-2">
+                      {totalRunning.name}
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
+                      Running for {totalRunning.duration} min — motor stops automatically.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Start Time</p>
+                      <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning.time}</p>
+                    </div>
+                    <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Duration</p>
+                      <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning.duration} min</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Duration</p>
-                  <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning ? `${totalRunning.duration} min` : '—'}</p>
+              </>
+            ) : (
+              <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8 py-4">
+                <div className="relative w-48 h-48 flex items-center justify-center">
+                  {/* High-end orbital animation */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 border border-dashed border-green-500/20 rounded-full"
+                  />
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-4 border border-blue-500/10 rounded-full"
+                  />
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-32 h-32 bg-gradient-to-br from-blue-500/20 to-green-500/20 blur-2xl rounded-full"
+                  />
+                  <div className="relative z-10 flex flex-col items-center">
+                    <FlaskConical size={48} className="text-[#4caf50] mb-2 opacity-80" />
+                    <div className="flex gap-1">
+                      {[0, 1, 2].map(i => (
+                        <motion.div
+                          key={i}
+                          animate={{ opacity: [0.2, 1, 0.2] }}
+                          transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
+                          className="w-1 h-1 bg-[#4caf50] rounded-full"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex-1 text-center md:text-left space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-500/10 rounded-full border border-blue-100 dark:border-blue-500/20">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">System Standby</span>
+                  </div>
+                  <h3 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-tight">
+                    Waiting for the <br/> 
+                    <span className="text-[#4caf50]">Next Nutrition Cycle</span>
+                  </h3>
+                  <p className="text-sm text-slate-400 dark:text-white/30 font-medium max-w-sm">
+                    All sensor nodes are healthy. The automated delivery system will engage precisely at the next scheduled timestamp.
+                  </p>
+                  
+                  {schedules.find(s => s.status === 'pending') && (
+                    <div className="inline-flex items-center gap-4 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 shadow-sm flex items-center justify-center text-[#4caf50]">
+                        <Clock size={20} />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest">Upcoming Node</p>
+                        <p className="text-sm font-bold text-slate-700 dark:text-white">
+                          {schedules.find(s => s.status === 'pending')?.name} @ {schedules.find(s => s.status === 'pending')?.time}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Schedule List */}
-          <div className="glass rounded-3xl p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
+          <div className="glass rounded-3xl p-8 border border-[#4caf50]/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
               <Clock size={20} className="text-slate-400" />
-              Scheduled Cycles
+              Upcoming Cycles
             </h3>
             <div className="space-y-4">
-              {schedules.map((s) => (
+              {schedules.filter(s => s.status === 'pending').map((s) => (
                 <div
                   key={s.id}
-                  className={`flex items-center justify-between p-4 rounded-2xl border transition-all ${
-                    s.status === 'running'
-                      ? 'bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/30'
-                      : s.status === 'completed'
-                        ? 'bg-green-50/50 dark:bg-[#1e9a4e]/5 border-green-100 dark:border-[#1e9a4e]/20'
-                        : 'bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5 hover:border-purple-200 dark:hover:border-purple-500/30'
-                  }`}
+                  className="flex items-center justify-between p-4 rounded-2xl border bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5 hover:border-green-200 dark:hover:border-green-500/30 transition-all"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                      s.status === 'running'   ? 'bg-purple-500 text-white animate-pulse' :
-                      s.status === 'completed' ? 'bg-green-100 dark:bg-[#1e9a4e]/20 text-[#1e9a4e]' :
-                      'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-white/40'
-                    }`}>
-                      {s.status === 'completed' ? <CheckCircle2 size={24} /> : <FlaskConical size={24} />}
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-white/40">
+                      <FlaskConical size={24} />
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-800 dark:text-white">{s.name}</h4>
@@ -372,39 +514,27 @@ const FertigationScheduler: React.FC = () => {
                         <span className="text-[10px] font-bold text-slate-400 dark:text-white/40 flex items-center gap-1">
                           <Zap size={10} /> {s.duration} min
                         </span>
-                        {s.status === 'running' && s.timeLeft !== undefined && (
-                          <span className="text-[10px] font-bold text-purple-500 flex items-center gap-1">
-                            <Timer size={10} /> {formatTime(s.timeLeft)} left
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <StatusBadge
-                      status={s.status === 'completed' ? 'healthy' : s.status === 'running' ? 'active' : 'idle'}
-                      label={s.status}
+                      status="idle"
+                      label="Pending"
                     />
-                    {s.status === 'pending' && (
-                      <button
-                        onClick={() => handleDelete(s.id)}
-                        className="text-slate-300 dark:text-white/20 hover:text-red-400 transition-colors p-1"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                    {s.status !== 'pending' && (
-                      <button className="text-slate-300 dark:text-white/20 hover:text-slate-600 dark:hover:text-white transition-colors p-1">
-                        <MoreVertical size={20} />
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleDelete(s.id)}
+                      className="text-slate-300 dark:text-white/20 hover:text-red-400 transition-colors p-1"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
               ))}
 
-              {schedules.length === 0 && (
-                <div className="text-center py-8 text-slate-400 dark:text-white/30 text-sm">
-                  No schedules yet. Click "New Schedule" to add one.
+              {schedules.filter(s => s.status === 'pending').length === 0 && (
+                <div className="text-center py-8 text-slate-400 dark:text-white/30 text-sm italic">
+                  No upcoming cycles scheduled.
                 </div>
               )}
             </div>
@@ -417,6 +547,7 @@ const FertigationScheduler: React.FC = () => {
             type="fertigation"
             isOn={data.fertigationMotor}
             onToggle={toggleFertigation}
+            disabled={schedules.filter(s => s.status === 'pending').length === 0 && !totalRunning}
           />
         </div>
       </div>

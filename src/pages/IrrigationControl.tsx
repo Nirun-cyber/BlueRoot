@@ -32,7 +32,7 @@ const IrrigationControl: React.FC = () => {
           <p className="text-slate-500 dark:text-white/40 font-medium">Manage water distribution and pump systems</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 glass px-4 py-2 rounded-xl border border-[#1e9a4e]/30 shadow-[0_0_15px_rgba(30,154,78,0.1)]">
+          <div className="flex items-center gap-2 glass px-4 py-2 rounded-xl border border-blue-500/30 shadow-[0_0_15px_rgba(0,115,230,0.1)]">
              <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Mode:</span>
              <StatusBadge status={isAutoMode ? 'active' : 'idle'} label={isAutoMode ? 'Auto' : 'Manual'} />
           </div>
@@ -41,7 +41,7 @@ const IrrigationControl: React.FC = () => {
             className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
               isAutoMode 
                 ? 'bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100' 
-                : 'bg-[#1e9a4e] text-white shadow-lg shadow-[#1e9a4e]/20 hover:bg-[#187a3e]'
+                : 'bg-[#0073e6] text-white shadow-lg shadow-blue-500/20 hover:bg-[#005bb5]'
             }`}
           >
             {isAutoMode ? 'Switch to Manual' : 'Switch to Auto'}
@@ -53,7 +53,7 @@ const IrrigationControl: React.FC = () => {
         {/* Left: Visualizer & Soil Stats */}
         <div className="lg:col-span-2 space-y-6">
           {/* Pump Animation Panel */}
-          <div className="glass rounded-[2rem] p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] relative overflow-hidden h-[400px] flex flex-col items-center justify-center">
+          <div className="glass rounded-[2rem] p-8 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)] relative overflow-hidden h-[400px] flex flex-col items-center justify-center">
             {/* Background water wave animation */}
             <AnimatePresence>
               {data.irrigationMotor && (
@@ -115,7 +115,7 @@ const IrrigationControl: React.FC = () => {
 
           {/* Soil & Safety cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
+            <div className="glass rounded-3xl p-6 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)]">
               <div className="flex items-center gap-3 mb-4 text-blue-500">
                 <Activity size={20} />
                 <h4 className="font-bold text-slate-800 dark:text-white">Soil Condition</h4>
@@ -135,8 +135,8 @@ const IrrigationControl: React.FC = () => {
               </p>
             </div>
 
-            <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
-              <div className={`flex items-center gap-3 mb-4 ${isPhSafe && isTdsSafe ? 'text-[#1e9a4e]' : 'text-red-500'}`}>
+            <div className="glass rounded-3xl p-6 border border-green-500/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">
+              <div className={`flex items-center gap-3 mb-4 ${isPhSafe && isTdsSafe ? 'text-[#4caf50]' : 'text-red-500'}`}>
                 {isPhSafe && isTdsSafe ? <ShieldCheck size={20} /> : <AlertCircle size={20} />}
                 <h4 className="font-bold text-slate-800 dark:text-white">Safety Status</h4>
               </div>
@@ -165,19 +165,19 @@ const IrrigationControl: React.FC = () => {
           />
 
           {/* Activity Log */}
-          <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
+          <div className="glass rounded-3xl p-6 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)]">
             <div className="flex items-center justify-between mb-6">
               <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
                 <History size={18} className="text-slate-400" />
                 Recent Activity
               </h4>
-              <button className="text-[10px] font-bold text-[#1e9a4e] uppercase hover:underline">View All</button>
+              <button className="text-[10px] font-bold text-[#0073e6] uppercase hover:underline">View All</button>
             </div>
             <div className="space-y-4">
               {logs.filter(l => l.type === 'irrigation').slice(0, 5).map(log => (
                 <div key={log.id} className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-3 last:border-0 last:pb-0">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${log.action === 'START' ? 'bg-[#1e9a4e]/10 text-[#1e9a4e]' : 'bg-red-50 text-red-500'}`}>
+                    <div className={`p-2 rounded-lg ${log.action === 'START' ? 'bg-blue-500/10 text-[#0073e6]' : 'bg-red-50 text-red-500'}`}>
                       {log.action === 'START' ? <Play size={12} /> : <Square size={12} />}
                     </div>
                     <div>

@@ -9,15 +9,17 @@ export default {
     extend: {
       colors: {
         'agri-green': {
-          DEFAULT: '#10b981',
-          light: '#34d399',
-          dark: '#059669',
+          DEFAULT: '#4caf50',
+          light: '#81c784',
+          dark: '#388e3c',
         },
         'agri-blue': {
-          DEFAULT: '#3b82f6',
-          light: '#60a5fa',
-          dark: '#2563eb',
+          DEFAULT: '#0073e6',
+          light: '#4dabf5',
+          dark: '#0056b3',
         },
+        'primary-blue': '#0073e6',
+        'primary-green': '#4caf50',
         'agri-dark': '#0a0a0a',
         'agri-surface': '#1a1a1a',
       },
