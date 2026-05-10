@@ -147,7 +147,24 @@ const Sidebar: React.FC = () => {
               {/* Logo / Header in Drawer */}
               <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                   <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center text-white font-black text-xs">BR</div>
+                   <motion.div
+                     whileHover={{ rotate: 5, scale: 1.05 }}
+                     transition={{ type: 'spring', stiffness: 400 }}
+                     className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-blue-500/10 shrink-0"
+                   >
+                     <AnimatePresence mode="wait">
+                       <motion.img
+                         key={theme}
+                         initial={{ opacity: 0, scale: 0.8 }}
+                         animate={{ opacity: 1, scale: 1.5 }}
+                         exit={{ opacity: 0, scale: 0.8 }}
+                         transition={{ duration: 0.2 }}
+                         src={theme === 'dark' ? logoDark : logoLight}
+                         alt="BlueRoot Logo"
+                         className="w-full h-full object-cover"
+                       />
+                     </AnimatePresence>
+                   </motion.div>
                    <h1 className="text-lg font-black tracking-tight flex items-center">
                       <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
                       <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
