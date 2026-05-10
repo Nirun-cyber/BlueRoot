@@ -71,8 +71,8 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
             transition={{ delay: 0.3 }}
             className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${
               trendPositive
-                ? 'bg-green-50 text-[#4caf50] border-green-100'
-                : 'bg-red-50 text-red-500 border-red-100'
+                ? 'bg-green-500/10 text-[#4caf50] border-green-500/20'
+                : 'bg-red-500/10 text-red-500 border-red-500/20'
             }`}
           >
             {trend}

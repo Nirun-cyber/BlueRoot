@@ -147,10 +147,10 @@ const HomeDashboard: React.FC = () => {
         className="grid grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {[
-          { title: 'Soil Moisture', value: data.soilMoisture, unit: '%',     icon: Droplet,       color: 'text-blue-500 bg-blue-50',   trend: '-2.4%',  isWarning: data.soilMoisture < thresholds.moistureOn },
-          { title: 'pH Level',      value: data.ph,           unit: 'pH',    icon: FlaskConical,  color: 'text-purple-500 bg-purple-50', trend: '+0.1',  isWarning: data.ph < thresholds.phMin || data.ph > thresholds.phMax },
-          { title: 'Salinity (TDS)',value: data.tds,           unit: 'ppm',   icon: Waves,         color: 'text-amber-500 bg-amber-50', trend: '+12',    isWarning: data.tds > thresholds.tdsMax },
-          { title: 'Recent Alerts', value: alerts.length,     unit: 'events',icon: AlertTriangle, color: 'text-red-500 bg-red-50',    trend: undefined, isWarning: alerts.some(a => a.type === 'error') },
+          { title: 'Soil Moisture', value: data.soilMoisture, unit: '%',     icon: Droplet,       color: 'text-blue-500 bg-blue-500/10',   trend: '-2.4%',  isWarning: data.soilMoisture < thresholds.moistureOn },
+          { title: 'pH Level',      value: data.ph,           unit: 'pH',    icon: FlaskConical,  color: 'text-purple-500 bg-purple-500/10', trend: '+0.1',  isWarning: data.ph < thresholds.phMin || data.ph > thresholds.phMax },
+          { title: 'Salinity (TDS)',value: data.tds,           unit: 'ppm',   icon: Waves,         color: 'text-amber-500 bg-amber-500/10', trend: '+12',    isWarning: data.tds > thresholds.tdsMax },
+          { title: 'Recent Alerts', value: alerts.length,     unit: 'events',icon: AlertTriangle, color: 'text-red-500 bg-red-500/10',    trend: undefined, isWarning: alerts.some(a => a.type === 'error') },
         ].map(card => (
           <motion.div key={card.title} variants={itemVariants}>
             <SensorCard {...card} />
@@ -178,7 +178,7 @@ const HomeDashboard: React.FC = () => {
                   <div className={`w-2 h-2 rounded-full ${l.color}`} />{l.label}
                 </span>
               ))}
-              <span className="flex items-center gap-1 text-[10px] font-bold text-[#0073e6] bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
+              <span className="flex items-center gap-1 text-[10px] font-bold text-[#0073e6] bg-blue-500/10 px-2 py-1 rounded-full border border-blue-500/20">
                 <TrendingUp size={10} /> Live
               </span>
             </div>
@@ -201,17 +201,17 @@ const HomeDashboard: React.FC = () => {
                 <YAxis stroke="rgba(0,0,0,0.15)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={{
-                    background: 'rgba(255,255,255,0.95)',
+                    background: 'rgba(15, 23, 42, 0.9)',
                     backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(30,154,78,0.2)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '16px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                    color: '#1e293b',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                    color: '#f8fafc',
                     fontSize: '12px',
                     fontWeight: 600,
                   }}
-                  itemStyle={{ color: '#475569' }}
-                  cursor={{ stroke: 'rgba(30,154,78,0.2)', strokeWidth: 1 }}
+                  itemStyle={{ color: '#cbd5e1' }}
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }}
                 />
                 <Area type="monotone" dataKey="moisture" stroke="#0073e6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorMoisture)" dot={false} />
                 <Area type="monotone" dataKey="ph" stroke="#4caf50" strokeWidth={2} fillOpacity={1} fill="url(#colorPh)" dot={false} yAxisId={0} />
@@ -260,7 +260,7 @@ const HomeDashboard: React.FC = () => {
             ].map(item => (
               <div key={item.label} className="flex items-center justify-between">
                 <span className="text-xs font-medium text-slate-600 dark:text-white/60">{item.label}</span>
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${item.ok ? 'bg-green-50 text-[#4caf50]' : 'bg-red-50 text-red-500'}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${item.ok ? 'bg-green-500/10 text-[#4caf50] border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
                   {item.ok ? '✓ OK' : '✗ Alert'}
                 </span>
               </div>

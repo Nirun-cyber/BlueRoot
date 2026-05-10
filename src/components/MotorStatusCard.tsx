@@ -19,7 +19,7 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
     <div className={`glass rounded-3xl p-6 border border-blue-500/20 shadow-[0_0_20px_rgba(0,115,230,0.1)] transition-shadow`}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isOn ? (isIrrigation ? 'bg-blue-50 text-blue-500' : 'bg-green-50 text-[#4caf50]') : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-white/40'}`}>
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isOn ? (isIrrigation ? 'bg-blue-500/10 text-blue-500' : 'bg-[#4caf50]/10 text-[#4caf50]') : 'bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-white/40'}`}>
             {isIrrigation ? <Droplet size={24} /> : <FlaskConical size={24} />}
           </div>
           <div>

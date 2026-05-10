@@ -158,7 +158,17 @@ const WaterQuality: React.FC = () => {
                   <YAxis yAxisId="left" stroke="#00000020" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis yAxisId="right" orientation="right" stroke="#00000020" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                    contentStyle={{ 
+                      background: 'rgba(15, 23, 42, 0.9)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '16px', 
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                      color: '#f8fafc',
+                      fontSize: '12px',
+                      fontWeight: 600
+                    }}
+                    itemStyle={{ color: '#cbd5e1' }}
                   />
                   <Line yAxisId="left" type="monotone" dataKey="ph" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#a855f7' }} />
                   <Line yAxisId="right" type="monotone" dataKey="tds" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6' }} />
