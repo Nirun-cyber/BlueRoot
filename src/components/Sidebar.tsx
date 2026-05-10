@@ -70,13 +70,13 @@ const Sidebar: React.FC = () => {
                   <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
                   <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
                 </h1>
-                <p className="text-[9px] font-bold text-slate-400 dark:text-white/30 uppercase tracking-widest">Smart Farm OS</p>
+                <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Smart Farm OS</p>
               </div>
             </Link>
 
             {/* Nav */}
             <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
-              <p className="px-4 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">
+              <p className="px-4 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] mb-3">
                 Intelligence Menu
               </p>
 
@@ -100,7 +100,7 @@ const Sidebar: React.FC = () => {
                             className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0073e6] rounded-r-full"
                           />
                         )}
-                        <item.icon size={18} className={isActive ? 'text-[#0073e6]' : 'text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/70 transition-colors'} />
+                        <item.icon size={18} className={isActive ? 'text-[#0073e6]' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white transition-colors'} />
                         <span className="text-sm">{item.label}</span>
                       </>
                     )}
@@ -111,14 +111,14 @@ const Sidebar: React.FC = () => {
 
             {/* Bottom operator */}
             <div className="p-4 border-t border-slate-100 dark:border-white/5 whitespace-nowrap">
-              <p className="px-3 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">Operator Node</p>
+              <p className="px-3 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] mb-3">Operator Node</p>
               <div className="px-3 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-xs shadow-md shadow-blue-500/30 shrink-0">
                   OA
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-800 dark:text-white">Admin User</p>
-                  <p className="text-[9px] font-semibold text-slate-400 dark:text-white/30">Farmer Node • Field Manager</p>
+                  <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">Farmer Node • Field Manager</p>
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ const Sidebar: React.FC = () => {
                     onClick={closeSidebar}
                     className={({ isActive }) => `
                       flex items-center gap-4 px-4 py-4 rounded-2xl transition-all
-                      ${isActive ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500 dark:text-white/60'}
+                      ${isActive ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}
                     `}
                   >
                     <item.icon size={20} />
@@ -206,7 +206,7 @@ const Sidebar: React.FC = () => {
             end={item.to === '/'}
             className={({ isActive }) => `
               flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-300 relative
-              ${isActive ? 'text-[#0073e6] dark:text-[#3b82f6]' : 'text-slate-400 dark:text-white/30'}
+              ${isActive ? 'text-[#0073e6] dark:text-[#3b82f6]' : 'text-slate-500 dark:text-slate-400'}
             `}
           >
             {({ isActive }) => (

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,27 +6,32 @@
 
 /* ─── BASE ─────────────────────────────────────────── */
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: 'Plus Jakarta Sans', system-ui, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
   color-scheme: light dark;
-  color: #1a1a1a;
-  background-color: #f5faf7;
+  /* Light mode: deep slate for maximum contrast (WCAG AA+) */
+  color: #0f172a;
+  background-color: #f1f5f3;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f5faf7;
+  background-color: #f1f5f3;
   transition: background-color 0.4s ease;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 .dark body {
-  background-color: #060a08;
+  /* Dark mode: near-black with slight green tint to match brand */
+  background-color: #050908;
+  color: #e2e8f0; /* slate-200 — very readable on dark */
 }
 
 #root { width: 100%; }
@@ -160,6 +165,54 @@ body {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .count-in { animation: count-in 0.35s ease both; }
+
+/* ─── TYPOGRAPHY SYSTEM ─────────────────────────────── */
+/* Headings: bold, tight tracking for both modes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  line-height: 1.25;
+}
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f1f5f9; /* slate-100 - crisp white in dark mode */
+}
+
+/* Body text - optimized contrast */
+p, span, li, td, th {
+  color: #1e293b; /* slate-800 — strong dark text in light mode */
+}
+.dark p, .dark span, .dark li, .dark td, .dark th {
+  color: #cbd5e1; /* slate-300 — comfortable, not eye-straining */
+}
+
+/* Subtle / secondary text */
+.text-muted {
+  color: #64748b; /* slate-500 */
+}
+.dark .text-muted {
+  color: #94a3b8; /* slate-400 — light enough to read, subtle */
+}
+
+/* Monospace numbers (sensor values) */
+.font-mono-data {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Labels & caps */
+.label-upper {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.dark .label-upper {
+  color: #94a3b8;
+}
 
 /* ─── LIQUID PROGRESS BAR ───────────────────────────── */
 .liquid-bar-blue {

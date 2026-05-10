@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Power, PowerOff, Droplet, FlaskConical } from 'lucide-react';
+import LiquidPipe from './LiquidPipe';
 
 interface MotorStatusCardProps {
   type: 'irrigation' | 'fertigation';
@@ -81,15 +82,12 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
       </div>
       
       {isOn && (
-        <div className="mt-4 flex flex-col gap-2">
-          <p className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase tracking-wider">Live Consumption</p>
-          <div className="h-3 bg-slate-200/50 dark:bg-black/40 rounded-full overflow-hidden shadow-inner border border-slate-300/50 dark:border-white/10 relative">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: '65%' }}
-              className={`absolute left-0 top-0 bottom-0 rounded-full ${isIrrigation ? 'liquid-bar-blue' : 'liquid-bar-green'}`}
-            ></motion.div>
+        <div className="mt-4 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase tracking-wider">Live Consumption</p>
+            <span className="text-[10px] text-blue-500 font-bold uppercase animate-pulse">Flowing Active</span>
           </div>
+          <LiquidPipe type={type} isActive={isOn} />
         </div>
       )}
     </div>
