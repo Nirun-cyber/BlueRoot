@@ -19,7 +19,7 @@ import { useSensors } from '../context/SensorContext';
 
 const Settings: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
-  const { thresholds, updateThresholds, isAutoMode, toggleAutoMode } = useSensors();
+  const { thresholds, updateThresholds } = useSensors();
   const [localThresholds, setLocalThresholds] = useState(thresholds);
 
   const handleSave = () => {
