@@ -15,7 +15,7 @@ import { StatusBadge } from '../components/Common';
 import MotorStatusCard from '../components/MotorStatusCard';
 
 const IrrigationControl: React.FC = () => {
-  const { data, logs, alerts, isAutoMode, toggleIrrigation, toggleAutoMode } = useSensors();
+  const { data, logs, alerts, thresholds, isAutoMode, toggleIrrigation, toggleAutoMode } = useSensors();
 
   const isPhSafe = data.ph >= 6.0 && data.ph <= 7.5;
   const isTdsSafe = data.tds <= 1200;
@@ -130,9 +130,14 @@ const IrrigationControl: React.FC = () => {
                   className="h-full bg-blue-500 rounded-full"
                 />
               </div>
-              <p className="text-[10px] text-slate-400 dark:text-white/40 mt-2 font-medium">
-                Threshold: {30}% | {data.soilMoisture < 30 ? '⚠ Below threshold' : '✓ Within range'}
-              </p>
+              <div className="flex justify-between items-center mt-2">
+                <p className="text-[10px] text-slate-400 dark:text-white/40 font-medium">
+                  ON: {thresholds.moistureOn}% | OFF: {thresholds.moistureOff}%
+                </p>
+                <p className="text-[10px] font-bold text-blue-500">
+                  {data.soilMoisture < thresholds.moistureOn ? '⚠ Below threshold' : data.soilMoisture > thresholds.moistureOff ? '✓ Saturated' : '✓ Within range'}
+                </p>
+              </div>
             </div>
 
             <div className="glass rounded-3xl p-6 border border-green-500/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">

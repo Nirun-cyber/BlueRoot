@@ -19,7 +19,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pushNotifications, setPushNotifications] = useState(true);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [thresholds, setThresholds] = useState<SensorContextType['thresholds']>({
-    soilMoisture: 30,
+    moistureOn: 30,
+    moistureOff: 80,
     phMin: 6.0,
     phMax: 7.5,
     tdsMax: 1200,
@@ -90,7 +91,7 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         let irrigationState = prev.irrigationMotor;
 
         if (isAutoMode) {
-          if (newMoisture < thresholds.soilMoisture && !irrigationState) {
+          if (newMoisture < thresholds.moistureOn && !irrigationState) {
             if (newPh >= thresholds.phMin && newPh <= thresholds.phMax && newTds <= thresholds.tdsMax) {
               irrigationState = true;
               addAlert('info', 'Low moisture detected. Auto-irrigation ON.');
@@ -98,7 +99,7 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             } else {
               addAlert('warning', 'Low moisture detected but safety lock active!');
             }
-          } else if (newMoisture > 80 && irrigationState) {
+          } else if (newMoisture > thresholds.moistureOff && irrigationState) {
             irrigationState = false;
             addAlert('success', 'Soil moisture restored. Auto-irrigation OFF.');
             addLog('irrigation', 'STOP');
@@ -152,7 +153,6 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toggleFertigation, 
       updateThresholds,
       toggleAutoMode,
-      setSoilMoistureThreshold: (val) => updateThresholds({ soilMoisture: val })
     }}>
       {children}
     </SensorContext.Provider>

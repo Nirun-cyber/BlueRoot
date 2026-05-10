@@ -100,11 +100,20 @@ const Settings: React.FC = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Soil Moisture Threshold (%)</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Moisture ON Threshold (%)</label>
                 <input 
                   type="number" 
-                  value={localThresholds.soilMoisture}
-                  onChange={(e) => setLocalThresholds({...localThresholds, soilMoisture: Number(e.target.value)})}
+                  value={localThresholds.moistureOn}
+                  onChange={(e) => setLocalThresholds({...localThresholds, moistureOn: Number(e.target.value)})}
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Moisture OFF Threshold (%)</label>
+                <input 
+                  type="number" 
+                  value={localThresholds.moistureOff}
+                  onChange={(e) => setLocalThresholds({...localThresholds, moistureOff: Number(e.target.value)})}
                   className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
                 />
               </div>

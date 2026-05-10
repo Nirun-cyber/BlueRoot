@@ -26,7 +26,8 @@ export interface SensorContextType {
   alerts: Alert[];
   logs: ActivityLog[];
   thresholds: {
-    soilMoisture: number;
+    moistureOn: number;
+    moistureOff: number;
     phMin: number;
     phMax: number;
     tdsMax: number;
@@ -40,5 +41,4 @@ export interface SensorContextType {
   toggleFertigation: () => void;
   updateThresholds: (newThresholds: Partial<SensorContextType['thresholds']>) => void;
   toggleAutoMode: () => void;
-  setSoilMoistureThreshold: (val: number) => void;
 }

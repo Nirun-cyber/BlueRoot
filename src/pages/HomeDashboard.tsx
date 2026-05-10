@@ -147,7 +147,7 @@ const HomeDashboard: React.FC = () => {
         className="grid grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {[
-          { title: 'Soil Moisture', value: data.soilMoisture, unit: '%',     icon: Droplet,       color: 'text-blue-500 bg-blue-50',   trend: '-2.4%',  isWarning: data.soilMoisture < thresholds.soilMoisture },
+          { title: 'Soil Moisture', value: data.soilMoisture, unit: '%',     icon: Droplet,       color: 'text-blue-500 bg-blue-50',   trend: '-2.4%',  isWarning: data.soilMoisture < thresholds.moistureOn },
           { title: 'pH Level',      value: data.ph,           unit: 'pH',    icon: FlaskConical,  color: 'text-purple-500 bg-purple-50', trend: '+0.1',  isWarning: data.ph < thresholds.phMin || data.ph > thresholds.phMax },
           { title: 'Salinity (TDS)',value: data.tds,           unit: 'ppm',   icon: Waves,         color: 'text-amber-500 bg-amber-50', trend: '+12',    isWarning: data.tds > thresholds.tdsMax },
           { title: 'Recent Alerts', value: alerts.length,     unit: 'events',icon: AlertTriangle, color: 'text-red-500 bg-red-50',    trend: undefined, isWarning: alerts.some(a => a.type === 'error') },
