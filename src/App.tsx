@@ -10,19 +10,21 @@ import Settings from './pages/Settings';
 import About from './pages/About';
 import { SensorProvider } from './context/SensorContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SidebarProvider } from './context/SidebarContext';
 import NotificationToast from './components/NotificationToast';
 
 function App() {
   return (
     <ThemeProvider>
-      <SensorProvider>
-        <Router>
-          <div className="flex min-h-screen bg-transparent text-slate-900 dark:text-white transition-colors duration-300">
-            <NotificationToast />
-            <Sidebar />
-            <div className="flex-1 flex flex-col h-screen overflow-hidden">
-              <Navbar />
-              <main className="flex-1 overflow-y-auto pb-20 lg:pb-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-agri-green/5 via-transparent to-transparent">
+      <SidebarProvider>
+        <SensorProvider>
+          <Router>
+            <div className="flex min-h-screen bg-transparent text-slate-900 dark:text-white transition-colors duration-300">
+              <NotificationToast />
+              <Sidebar />
+              <div className="flex-1 flex flex-col h-screen overflow-hidden">
+                <Navbar />
+                <main className="flex-1 overflow-y-auto pb-20 lg:pb-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-agri-green/5 via-transparent to-transparent">
                 <Routes>
                   <Route path="/" element={<HomeDashboard />} />
                   <Route path="/index.html" element={<HomeDashboard />} />
@@ -38,7 +40,8 @@ function App() {
             </div>
           </div>
         </Router>
-      </SensorProvider>
+        </SensorProvider>
+      </SidebarProvider>
     </ThemeProvider>
   );
 }
