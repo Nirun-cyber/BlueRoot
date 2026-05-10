@@ -112,7 +112,7 @@ const WaterQuality: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center justify-center py-6">
-             <div className="text-5xl md:text-6xl font-black mb-2 text-agri-blue">{data.tds}</div>
+             <div className="text-4xl md:text-6xl font-black mb-2 text-agri-blue truncate max-w-full">{data.tds.toFixed(4)}</div>
              <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Parts Per Million</p>
           </div>
 
@@ -133,12 +133,12 @@ const WaterQuality: React.FC = () => {
 
       {/* Historical Analytics */}
       <div className="glass rounded-[2rem] p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] transition-shadow">
-         <div className="flex items-center justify-between mb-8">
+         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
                <h3 className="text-xl font-bold text-slate-800 dark:text-white">Water Parameter Trends</h3>
                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest mt-1">Detailed Analysis Over 24h</p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-purple-500"></div>
                   <span className="text-[10px] font-bold text-slate-500 dark:text-white/60">pH Levels</span>

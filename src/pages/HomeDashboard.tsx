@@ -116,7 +116,7 @@ const HomeDashboard: React.FC = () => {
             className="text-white/75 font-medium text-sm max-w-xl"
           >
             Moisture index at <strong className="text-white">{data.soilMoisture.toFixed(1)}%</strong> (Critical). 
-            Environmental factors are accelerating transpiration. TDS at <strong className="text-white">{data.tds.toFixed(0)} ppm</strong>.
+            Environmental factors are accelerating transpiration. TDS at <strong className="text-white">{data.tds.toFixed(4)} ppm</strong>.
           </motion.p>
 
           {/* Mini stats row */}
@@ -127,7 +127,7 @@ const HomeDashboard: React.FC = () => {
             {[
               { label: 'Moisture', value: `${data.soilMoisture.toFixed(1)}%`, icon: Droplet },
               { label: 'pH',       value: data.ph.toFixed(1),                icon: FlaskConical },
-              { label: 'TDS',      value: `${data.tds.toFixed(0)} ppm`,       icon: Waves },
+              { label: 'TDS',      value: `${data.tds.toFixed(4)} ppm`,       icon: Waves },
             ].map(stat => (
               <div key={stat.label} className="flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-2 rounded-2xl border border-white/20">
                 <stat.icon size={14} className="text-green-200" />
@@ -271,7 +271,7 @@ const HomeDashboard: React.FC = () => {
         {/* TDS Trend Mini Chart */}
         <motion.div variants={itemVariants} className="glass card-glow rounded-3xl p-6">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white/40 mb-1">TDS Trend</p>
-          <p className="text-2xl font-black text-slate-800 dark:text-white mb-4">{data.tds.toFixed(0)} <span className="text-sm font-bold text-slate-400">ppm</span></p>
+          <p className="text-2xl font-black text-slate-800 dark:text-white mb-4">{data.tds.toFixed(4)} <span className="text-sm font-bold text-slate-400">ppm</span></p>
           <div className="h-[80px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={mockChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
