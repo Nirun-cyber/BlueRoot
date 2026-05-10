@@ -9,8 +9,7 @@ import {
   Bell, 
   Settings, 
   Info,
-  Sprout,
-  User
+  Sprout
 } from 'lucide-react';
 
 const navItems = [
@@ -25,11 +24,11 @@ const navItems = [
 
 const sidebarVariants = {
   hidden: { opacity: 0, x: -24 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.07, delayChildren: 0.15 } },
+  show:   { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, staggerChildren: 0.07, delayChildren: 0.15 } },
 };
 const itemVariants = {
   hidden: { opacity: 0, x: -16 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+  show:   { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 const Sidebar: React.FC = () => {

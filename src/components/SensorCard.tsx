@@ -14,8 +14,8 @@ interface SensorCardProps {
 // Animates a number from 0 → target on mount
 function useCountUp(target: number, duration = 800) {
   const [display, setDisplay] = useState(0);
-  const rafRef = useRef<number>();
-  const startRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
+  const startRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const start = performance.now();

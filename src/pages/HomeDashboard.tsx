@@ -41,7 +41,7 @@ const containerVariants = {
 };
 const itemVariants = {
   hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 // Hero particles config
@@ -69,7 +69,7 @@ const HomeDashboard: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
         className="w-full bg-gradient-to-br from-[#1e9a4e] via-[#17823f] to-[#0f5c2c] rounded-[32px] p-10 relative overflow-hidden shadow-2xl shadow-[#1e9a4e]/30"
       >
         {/* Animated particles */}

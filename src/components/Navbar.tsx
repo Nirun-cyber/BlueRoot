@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, User, Activity } from 'lucide-react';
+import { Bell, Activity } from 'lucide-react';
 import { ThemeToggle } from './Common';
 
 const Navbar: React.FC = () => {
-  const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    return () => {};
   }, []);
 
   return (

@@ -4,7 +4,8 @@ console.log("Main.tsx Loading...");
 import './index.css'
 import App from './App.tsx'
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 
 class ErrorBoundary extends Component<{children: ReactNode}, {hasError: boolean, error: Error | null}> {
   constructor(props: {children: ReactNode}) {
