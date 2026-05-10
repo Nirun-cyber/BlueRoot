@@ -117,15 +117,7 @@ const Settings: React.FC = () => {
                   className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Max TDS (ppm)</label>
-                <input 
-                  type="number" 
-                  value={localThresholds.tdsMax}
-                  onChange={(e) => setLocalThresholds({...localThresholds, tdsMax: Number(e.target.value)})}
-                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
-                />
-              </div>
+
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Min pH Level</label>
                 <input 
@@ -143,6 +135,15 @@ const Settings: React.FC = () => {
                   step="0.1"
                   value={localThresholds.phMax}
                   onChange={(e) => setLocalThresholds({...localThresholds, phMax: Number(e.target.value)})}
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Max TDS (ppm)</label>
+                <input 
+                  type="number" 
+                  value={localThresholds.tdsMax}
+                  onChange={(e) => setLocalThresholds({...localThresholds, tdsMax: Number(e.target.value)})}
                   className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#1e9a4e] text-slate-800 dark:text-white transition-colors"
                 />
               </div>
