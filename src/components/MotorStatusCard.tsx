@@ -83,11 +83,11 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
       {isOn && (
         <div className="mt-4 flex flex-col gap-2">
           <p className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase tracking-wider">Live Consumption</p>
-          <div className="h-1.5 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+          <div className="h-3 bg-slate-200/50 dark:bg-black/40 rounded-full overflow-hidden shadow-inner border border-slate-300/50 dark:border-white/10 relative">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: '65%' }}
-              className={`h-full ${isIrrigation ? 'bg-blue-500' : 'bg-[#4caf50]'}`}
+              className={`absolute left-0 top-0 bottom-0 rounded-full ${isIrrigation ? 'liquid-bar-blue' : 'liquid-bar-green'}`}
             ></motion.div>
           </div>
         </div>
