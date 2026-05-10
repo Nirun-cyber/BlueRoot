@@ -63,14 +63,14 @@ const HomeDashboard: React.FC = () => {
   }, [alerts]);
 
   return (
-    <div className="p-8 space-y-8 max-w-[1600px] mx-auto">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto">
 
       {/* ═══ HERO BANNER ══════════════════════════════════════════════ */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
-        className="w-full bg-gradient-to-br from-[#0073e6] via-[#005bb5] to-[#4caf50] rounded-[32px] p-10 relative overflow-hidden shadow-2xl shadow-blue-500/20"
+        className="w-full bg-gradient-to-br from-[#0073e6] via-[#005bb5] to-[#4caf50] rounded-[24px] md:rounded-[32px] p-6 md:p-10 relative overflow-hidden shadow-2xl shadow-blue-500/20"
       >
         {/* Animated particles */}
         {PARTICLES.map((p, i) => (
@@ -111,9 +111,9 @@ const HomeDashboard: React.FC = () => {
 
           <motion.h2
             initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-3xl md:text-4xl font-black leading-tight mb-3"
+            className="text-2xl md:text-4xl font-black leading-tight mb-3"
           >
-            Soil moisture is low & salinity is rising.<br/>
+            Soil moisture is low & salinity is rising.<br className="hidden md:block" />
             <span className="text-green-200">Irrigation recommended within 2 hours.</span>
           </motion.h2>
 
@@ -172,7 +172,7 @@ const HomeDashboard: React.FC = () => {
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         {/* Main Area Chart */}
-        <motion.div variants={itemVariants} className="lg:col-span-2 glass card-glow rounded-[2rem] p-8 flex flex-col">
+        <motion.div variants={itemVariants} className="lg:col-span-2 glass card-glow rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-8 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-xl font-black text-slate-800 dark:text-white">Moisture & Quality Trends</h3>

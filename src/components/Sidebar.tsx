@@ -35,92 +35,123 @@ const itemVariants = {
 
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
+
   return (
-    <motion.aside
-      variants={sidebarVariants}
-      initial="hidden"
-      animate="show"
-      className="w-64 h-screen bg-white dark:bg-[#0a0f0c] border-r border-slate-100 dark:border-white/5 flex flex-col sticky top-0 transition-colors duration-300"
-    >
-      {/* Logo */}
-      <Link to="/" className="p-6 pb-4 flex items-center gap-3 border-b border-slate-100 dark:border-white/5 group hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-        <motion.div
-          whileHover={{ rotate: 5, scale: 1.05 }}
-          transition={{ type: 'spring', stiffness: 400 }}
-          className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-blue-500/10"
-        >
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={theme}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1.5 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-              src={theme === 'dark' ? logoDark : logoLight}
-              alt="BlueRoot Logo"
-              className="w-full h-full object-cover"
-            />
-          </AnimatePresence>
-        </motion.div>
-        <div>
-          <h1 className="text-lg font-black tracking-tight flex items-center">
-            <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
-            <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
-          </h1>
-          <p className="text-[9px] font-bold text-slate-400 dark:text-white/30 uppercase tracking-widest">Smart Farm OS</p>
-        </div>
-      </Link>
-
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
-        <p className="px-4 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">
-          Intelligence Menu
-        </p>
-
-        {navItems.map((item) => (
-          <motion.div key={item.to} variants={itemVariants}>
-            <NavLink
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) => `
-                flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group relative
-                ${isActive
-                  ? 'bg-blue-50 dark:bg-blue-500/10 text-[#0073e6] dark:text-[#3b82f6] font-bold'
-                  : 'text-slate-500 dark:text-white/50 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5'}
-              `}
-            >
-              {({ isActive }) => (
-                <>
-                  {/* Active indicator bar */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeBar"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0073e6] rounded-r-full"
-                    />
-                  )}
-                  <item.icon size={18} className={isActive ? 'text-[#0073e6]' : 'text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/70 transition-colors'} />
-                  <span className="text-sm">{item.label}</span>
-                </>
-              )}
-            </NavLink>
+    <>
+      {/* ============ DESKTOP SIDEBAR ============ */}
+      <motion.aside
+        variants={sidebarVariants}
+        initial="hidden"
+        animate="show"
+        className="hidden lg:flex w-64 h-screen bg-white dark:bg-[#0a0f0c] border-r border-slate-100 dark:border-white/5 flex-col sticky top-0 transition-colors duration-300"
+      >
+        {/* Logo */}
+        <Link to="/" className="p-6 pb-4 flex items-center gap-3 border-b border-slate-100 dark:border-white/5 group hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+          <motion.div
+            whileHover={{ rotate: 5, scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 400 }}
+            className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-blue-500/10"
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={theme}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1.5 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+                src={theme === 'dark' ? logoDark : logoLight}
+                alt="BlueRoot Logo"
+                className="w-full h-full object-cover"
+              />
+            </AnimatePresence>
           </motion.div>
-        ))}
-      </nav>
-
-      {/* Bottom operator */}
-      <div className="p-4 border-t border-slate-100 dark:border-white/5">
-        <p className="px-3 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">Operator Node</p>
-        <div className="px-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-xs shadow-md shadow-blue-500/30">
-            OA
-          </div>
           <div>
-            <p className="text-xs font-bold text-slate-800 dark:text-white">Admin User</p>
-            <p className="text-[9px] font-semibold text-slate-400 dark:text-white/30">Farmer Node • Field Manager</p>
+            <h1 className="text-lg font-black tracking-tight flex items-center">
+              <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
+              <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
+            </h1>
+            <p className="text-[9px] font-bold text-slate-400 dark:text-white/30 uppercase tracking-widest">Smart Farm OS</p>
+          </div>
+        </Link>
+
+        {/* Nav */}
+        <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+          <p className="px-4 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">
+            Intelligence Menu
+          </p>
+
+          {navItems.map((item) => (
+            <motion.div key={item.to} variants={itemVariants}>
+              <NavLink
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) => `
+                  flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group relative
+                  ${isActive
+                    ? 'bg-blue-50 dark:bg-blue-500/10 text-[#0073e6] dark:text-[#3b82f6] font-bold'
+                    : 'text-slate-500 dark:text-white/50 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5'}
+                `}
+              >
+                {({ isActive }) => (
+                  <>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeBar"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#0073e6] rounded-r-full"
+                      />
+                    )}
+                    <item.icon size={18} className={isActive ? 'text-[#0073e6]' : 'text-slate-400 dark:text-white/30 group-hover:text-slate-600 dark:group-hover:text-white/70 transition-colors'} />
+                    <span className="text-sm">{item.label}</span>
+                  </>
+                )}
+              </NavLink>
+            </motion.div>
+          ))}
+        </nav>
+
+        {/* Bottom operator */}
+        <div className="p-4 border-t border-slate-100 dark:border-white/5">
+          <p className="px-3 text-[9px] font-black text-slate-300 dark:text-white/25 uppercase tracking-[0.18em] mb-3">Operator Node</p>
+          <div className="px-3 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-xs shadow-md shadow-blue-500/30">
+              OA
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-800 dark:text-white">Admin User</p>
+              <p className="text-[9px] font-semibold text-slate-400 dark:text-white/30">Farmer Node • Field Manager</p>
+            </div>
           </div>
         </div>
+      </motion.aside>
+
+      {/* ============ MOBILE BOTTOM NAV ============ */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0a0f0c]/80 backdrop-blur-xl border-t border-slate-100 dark:border-white/5 px-2 py-3 flex items-center justify-around">
+        {navItems.slice(0, 5).map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/'}
+            className={({ isActive }) => `
+              flex flex-col items-center gap-1 px-3 py-1 rounded-xl transition-all duration-300 relative
+              ${isActive ? 'text-[#0073e6] dark:text-[#3b82f6]' : 'text-slate-400 dark:text-white/30'}
+            `}
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute -top-1 w-12 h-1 bg-[#0073e6] rounded-full"
+                  />
+                )}
+                <item.icon size={20} />
+                <span className="text-[10px] font-bold">{item.label.split(' ')[0]}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
       </div>
-    </motion.aside>
+    </>
   );
 };
 

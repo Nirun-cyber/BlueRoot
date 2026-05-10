@@ -222,7 +222,7 @@ const FertigationScheduler: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 max-w-[1600px] mx-auto relative">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto relative">
 
       {/* ============ NEW SCHEDULE MODAL ============ */}
       <AnimatePresence>
@@ -245,7 +245,7 @@ const FertigationScheduler: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 className="w-full max-w-md mx-4 pointer-events-auto"
               >
-              <div className="bg-white dark:bg-[#1a1a1a] rounded-[2rem] p-8 border border-green-200 dark:border-green-500/30 shadow-2xl shadow-green-500/10">
+                <div className="bg-white dark:bg-[#1a1a1a] rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border border-green-200 dark:border-green-500/30 shadow-2xl shadow-green-500/10">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
@@ -253,8 +253,8 @@ const FertigationScheduler: React.FC = () => {
                       <Timer size={20} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 dark:text-white">New Fertigation Schedule</h3>
-                      <p className="text-xs text-slate-400 dark:text-white/40">Set time & duration for auto motor control</p>
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-white">New Schedule</h3>
+                      <p className="text-[10px] md:text-xs text-slate-400 dark:text-white/40">Set time & duration</p>
                     </div>
                   </div>
                   <button
@@ -371,7 +371,7 @@ const FertigationScheduler: React.FC = () => {
         <div className="lg:col-span-2 space-y-8">
 
           {/* Active Cycle Panel */}
-          <div className="glass rounded-[2rem] p-8 border border-slate-100 dark:border-white/5 shadow-2xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden flex flex-col md:flex-row items-center gap-12 min-h-[300px]">
+          <div className="glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border border-slate-100 dark:border-white/5 shadow-2xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden flex flex-col md:flex-row items-center gap-8 md:gap-12 min-h-[300px]">
             {totalRunning ? (
               <>
                 <div className="relative shrink-0">
@@ -418,7 +418,7 @@ const FertigationScheduler: React.FC = () => {
               </>
             ) : (
               <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8 py-4">
-                <div className="relative w-48 h-48 flex items-center justify-center">
+                <div className="relative w-32 h-32 md:w-48 md:h-48 flex items-center justify-center scale-90 md:scale-100">
                   {/* High-end orbital animation */}
                   <motion.div
                     animate={{ rotate: 360 }}
@@ -436,10 +436,10 @@ const FertigationScheduler: React.FC = () => {
                       opacity: [0.3, 0.6, 0.3]
                     }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-32 h-32 bg-gradient-to-br from-blue-500/20 to-green-500/20 blur-2xl rounded-full"
+                    className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-500/20 to-green-500/20 blur-2xl rounded-full"
                   />
                   <div className="relative z-10 flex flex-col items-center">
-                    <FlaskConical size={48} className="text-[#4caf50] mb-2 opacity-80" />
+                    <FlaskConical size={32} className="md:size-[48px] text-[#4caf50] mb-2 opacity-80" />
                     <div className="flex gap-1">
                       {[0, 1, 2].map(i => (
                         <motion.div

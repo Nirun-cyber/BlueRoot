@@ -16,6 +16,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [isAutoMode, setIsAutoMode] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [emailAlerts, setEmailAlerts] = useState(true);
   const [thresholds, setThresholds] = useState<SensorContextType['thresholds']>({
     soilMoisture: 30,
     phMin: 6.0,
@@ -105,13 +107,20 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
         if (irrigationState && (newPh < thresholds.phMin || newPh > thresholds.phMax)) {
           irrigationState = false;
-          addAlert('error', 'EMERGENCY SHUTDOWN: Abnormal pH detected!');
+          addAlert('error', `EMERGENCY SHUTDOWN: Abnormal pH detected (${newPh.toFixed(1)})!`);
           addLog('irrigation', 'STOP');
+        } else if (!irrigationState && (newPh < thresholds.phMin || newPh > thresholds.phMax)) {
+          // Monitor even when motor is OFF
+          addAlert('warning', `System Alert: Abnormal pH detected (${newPh.toFixed(1)})! Check sensor nodes.`);
         }
+
         if (irrigationState && newTds > thresholds.tdsMax) {
           irrigationState = false;
-          addAlert('error', 'EMERGENCY SHUTDOWN: High salinity detected!');
+          addAlert('error', `EMERGENCY SHUTDOWN: High salinity detected (${newTds.toFixed(0)} ppm)!`);
           addLog('irrigation', 'STOP');
+        } else if (!irrigationState && newTds > thresholds.tdsMax) {
+          // Monitor even when motor is OFF
+          addAlert('warning', `System Alert: High TDS detected (${newTds.toFixed(0)} ppm)! Nutrient levels exceed safety threshold.`);
         }
 
         return {
@@ -135,6 +144,10 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       logs,
       thresholds, 
       isAutoMode,
+      pushNotifications,
+      setPushNotifications,
+      emailAlerts,
+      setEmailAlerts,
       toggleIrrigation, 
       toggleFertigation, 
       updateThresholds,

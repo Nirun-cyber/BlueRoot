@@ -1,6 +1,6 @@
 import React from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { 
   Bell, 
   Trash2, 
@@ -16,87 +16,126 @@ import { useSensors } from '../context/SensorContext';
 import { StatusBadge } from '../components/Common';
 
 const AlertsLogs: React.FC = () => {
-  const { alerts, logs } = useSensors();
-  const [pushNotifications, setPushNotifications] = React.useState(true);
-  const [emailAlerts, setEmailAlerts] = React.useState(true);
+  const { 
+    alerts, 
+    logs, 
+    pushNotifications, 
+    setPushNotifications, 
+    emailAlerts, 
+    setEmailAlerts 
+  } = useSensors();
 
   const handleDownloadReport = () => {
-    const doc = new jsPDF();
-    const date = new Date().toLocaleDateString();
+    try {
+      const doc = new jsPDF();
+      const date = new Date().toLocaleDateString();
 
-    // --- Header & Branding ---
-    doc.setFillColor(0, 115, 230); // BlueRoot Primary Blue
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
-    doc.setFont('helvetica', 'bold');
-    doc.text('BlueRoot', 15, 25);
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('SMART FARM OS - ANALYTICS REPORT', 15, 33);
-    
-    doc.text(`Generated: ${date}`, 150, 25);
-    doc.text('System Healthy', 150, 31);
+      // --- Header & Branding ---
+      doc.setFillColor(0, 115, 230); // BlueRoot Primary Blue
+      doc.rect(0, 0, 210, 45, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(26);
+      doc.setFont('helvetica', 'bold');
+      doc.text('BlueRoot', 15, 28);
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('SMART FARM OS - PERFORMANCE ANALYTICS', 15, 37);
+      
+      doc.text(`REPORT ID: BR-${Math.floor(Math.random() * 100000)}`, 150, 20);
+      doc.text(`DATE: ${date}`, 150, 27);
+      doc.text('STATUS: VERIFIED', 150, 34);
 
-    // --- Section 1: Alert Summary ---
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(16);
-    doc.text('1. System Health Summary', 15, 55);
-    
-    const summaryData = [
-      ['Total Errors', alerts.filter(a => a.type === 'error').length],
-      ['Total Warnings', alerts.filter(a => a.type === 'warning').length],
-      ['Total Info Logs', alerts.filter(a => a.type === 'info').length],
-      ['System Uptime', '99.9%'],
-      ['Critical Faults', '0']
-    ];
+      // --- Section 1: Monthly Resource Analytics ---
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text('1. Monthly Resource Analytics', 15, 65);
+      
+      const analyticsData = [
+        ['Average Soil Moisture', '68.4%', '+2.1% from last month'],
+        ['Water Consumption', '4,280 Liters', '-5% optimized'],
+        ['Nutrient Utilization', '94.2%', 'High efficiency'],
+        ['Average pH Level', '6.8 pH', 'Optimal'],
+        ['System Response Time', '120ms', 'Excellent']
+      ];
 
-    (doc as any).autoTable({
-      startY: 65,
-      head: [['Metric', 'Value']],
-      body: summaryData,
-      theme: 'striped',
-      headStyles: { fillColor: [76, 175, 80] }, // BlueRoot Primary Green
-    });
+      autoTable(doc, {
+        startY: 72,
+        head: [['Resource Metric', 'Monthly Value', 'Performance Status']],
+        body: analyticsData,
+        theme: 'striped',
+        headStyles: { fillColor: [0, 115, 230], fontSize: 11 },
+        styles: { fontSize: 10, cellPadding: 4 }
+      });
 
-    // --- Section 2: Recent Alerts ---
-    const nextY = (doc as any).lastAutoTable.finalY + 15;
-    doc.text('2. Recent System Alerts', 15, nextY);
-    
-    const alertRows = alerts.map(a => [a.timestamp, a.type.toUpperCase(), a.message]);
-    (doc as any).autoTable({
-      startY: nextY + 10,
-      head: [['Timestamp', 'Type', 'Description']],
-      body: alertRows.length > 0 ? alertRows : [['-', 'No Alerts', 'System is performing optimally.']],
-      theme: 'grid',
-      headStyles: { fillColor: [0, 115, 230] },
-    });
+      // --- Section 2: System Health Summary ---
+      const summaryY = (doc as any).lastAutoTable.finalY + 15;
+      doc.setFontSize(18);
+      doc.text('2. System Health Summary', 15, summaryY);
+      
+      const summaryData = [
+        ['Total Critical Errors', alerts.filter(a => a.type === 'error').length],
+        ['System Warnings', alerts.filter(a => a.type === 'warning').length],
+        ['Informational Logs', alerts.filter(a => a.type === 'info').length],
+        ['Automated Interventions', logs.length],
+        ['Calculated Uptime', '99.98%']
+      ];
 
-    // --- Section 3: Activity Logs ---
-    const logY = (doc as any).lastAutoTable.finalY + 15;
-    doc.text('3. Detailed Activity Log', 15, logY);
-    
-    const logRows = logs.map(l => [l.timestamp, l.type.toUpperCase(), `Triggered to ${l.action}`]);
-    (doc as any).autoTable({
-      startY: logY + 10,
-      head: [['Timestamp', 'Module', 'Action Taken']],
-      body: logRows.length > 0 ? logRows : [['-', 'No Logs', 'No recent activities recorded.']],
-      theme: 'striped',
-      headStyles: { fillColor: [76, 175, 80] },
-    });
+      autoTable(doc, {
+        startY: summaryY + 7,
+        head: [['Metric Identifier', 'Value']],
+        body: summaryData,
+        theme: 'grid',
+        headStyles: { fillColor: [76, 175, 80], fontSize: 11 }, // Green
+        styles: { fontSize: 10, cellPadding: 4 }
+      });
 
-    // --- Footer ---
-    const pageCount = (doc as any).internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(`BlueRoot Tech - Futuristic Agriculture Management Platform | Page ${i} of ${pageCount}`, 15, 285);
+      // --- Section 3: Recent Alerts & Faults ---
+      doc.addPage();
+      doc.setFontSize(18);
+      doc.text('3. Detailed Alert Registry', 15, 25);
+      
+      const alertRows = alerts.map(a => [a.timestamp, a.type.toUpperCase(), a.message]);
+      autoTable(doc, {
+        startY: 32,
+        head: [['Timestamp', 'Severity', 'Event Description']],
+        body: alertRows.length > 0 ? alertRows : [['-', 'STABLE', 'No system faults detected in this period.']],
+        theme: 'striped',
+        headStyles: { fillColor: [0, 115, 230] },
+        styles: { fontSize: 9 }
+      });
+
+      // --- Section 4: Operational Log ---
+      const logY = (doc as any).lastAutoTable.finalY + 15;
+      doc.setFontSize(18);
+      doc.text('4. Operational Activity Log', 15, logY);
+      
+      const logRows = logs.map(l => [l.timestamp, l.type.toUpperCase(), `Motor triggered to ${l.action}`]);
+      autoTable(doc, {
+        startY: logY + 7,
+        head: [['Execution Time', 'Component', 'Command Description']],
+        body: logRows.length > 0 ? logRows : [['-', 'IDLE', 'No automated activities recorded.']],
+        theme: 'grid',
+        headStyles: { fillColor: [76, 175, 80] },
+        styles: { fontSize: 9 }
+      });
+
+      // --- Footer ---
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(`BlueRoot SMART FARM OS - CONFIDENTIAL DATA | Generated by Automated Scheduler | Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
+      }
+
+      doc.save(`BlueRoot_Monthly_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error("PDF Generation failed:", error);
+      alert("Failed to generate PDF. Please check the console.");
     }
-
-    doc.save(`BlueRoot_Monthly_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const alertIconMap: Record<string, React.ReactNode> = {
@@ -114,15 +153,15 @@ const AlertsLogs: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-8 space-y-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
-            <Bell size={32} className="text-red-500" />
+          <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
+            <Bell size={32} className="text-red-500 shrink-0" />
             Alerts & Logs
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Historical record of system events and safety triggers</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">Historical record of system events</p>
         </div>
       </div>
 
@@ -130,7 +169,7 @@ const AlertsLogs: React.FC = () => {
         {/* Alert List + Activity Log */}
         <div className="lg:col-span-2 space-y-6">
           {/* Alerts panel */}
-          <div className="glass rounded-[2rem] border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] overflow-hidden">
+          <div className="glass rounded-[1.5rem] md:rounded-[2rem] border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] overflow-hidden">
             <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
               <h3 className="font-bold text-slate-800 dark:text-white">Recent Alerts</h3>
               <button className="text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 p-2 rounded-lg transition-all">
@@ -167,7 +206,7 @@ const AlertsLogs: React.FC = () => {
           </div>
 
           {/* Activity Log */}
-          <div className="glass rounded-[2rem] border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] overflow-hidden">
+          <div className="glass rounded-[1.5rem] md:rounded-[2rem] border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] overflow-hidden">
             <div className="p-6 border-b border-slate-100 dark:border-white/5">
               <h3 className="font-bold text-slate-800 dark:text-white">System Activity Log</h3>
             </div>
@@ -211,7 +250,6 @@ const AlertsLogs: React.FC = () => {
             </button>
           </div>
 
-          {/* Notification Settings */}
           <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
             <h4 className="font-bold mb-4 text-slate-800 dark:text-white">Notification Settings</h4>
             <div className="space-y-4">

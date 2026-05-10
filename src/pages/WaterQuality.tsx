@@ -38,14 +38,14 @@ const WaterQuality: React.FC = () => {
   const isQualitySafe = isPhSafe && isTdsSafe;
 
   return (
-    <div className="p-8 space-y-8 max-w-[1600px] mx-auto">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
-            <Activity size={32} className="text-agri-green" />
-            Water Quality Monitoring
+          <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
+            <Activity size={32} className="text-agri-green shrink-0" />
+            Water Quality
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Real-time analysis of pH and TDS parameters</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">Real-time pH and TDS analysis</p>
         </div>
         <div className={`flex items-center gap-4 px-6 py-3 rounded-2xl border ${isQualitySafe ? 'bg-agri-green/10 border-agri-green/20 text-agri-green' : 'bg-red-500/10 border-red-500/20 text-red-500'} transition-all duration-500`}>
            {isQualitySafe ? <ShieldCheck size={24} /> : <AlertTriangle size={24} className="animate-bounce" />}
@@ -74,8 +74,8 @@ const WaterQuality: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center justify-center py-6">
-             <div className="text-6xl font-black mb-2 text-purple-500">{data.ph.toFixed(1)}</div>
-             <p className="text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Live pH Value</p>
+             <div className="text-5xl md:text-6xl font-black mb-2 text-purple-500">{data.ph.toFixed(1)}</div>
+             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Live pH Value</p>
           </div>
 
           <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full relative overflow-hidden">
@@ -112,8 +112,8 @@ const WaterQuality: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center justify-center py-6">
-             <div className="text-6xl font-black mb-2 text-agri-blue">{data.tds}</div>
-             <p className="text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Parts Per Million</p>
+             <div className="text-5xl md:text-6xl font-black mb-2 text-agri-blue">{data.tds}</div>
+             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Parts Per Million</p>
           </div>
 
           <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full relative overflow-hidden">

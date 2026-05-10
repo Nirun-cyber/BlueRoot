@@ -21,30 +21,30 @@ const IrrigationControl: React.FC = () => {
   const isTdsSafe = data.tds <= 1200;
 
   return (
-    <div className="p-8 space-y-8 max-w-[1600px] mx-auto">
+    <div className="p-4 md:p-8 space-y-8 max-w-[1600px] mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
-            <Droplets size={32} className="text-blue-500" />
+          <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
+            <Droplets size={32} className="text-blue-500 shrink-0" />
             Irrigation Control
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Manage water distribution and pump systems</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">Manage water distribution</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 glass px-4 py-2 rounded-xl border border-blue-500/30 shadow-[0_0_15px_rgba(0,115,230,0.1)]">
-             <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Mode:</span>
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex-1 md:flex-none flex items-center gap-2 glass px-3 md:px-4 py-2 rounded-xl border border-blue-500/30 shadow-[0_0_15px_rgba(0,115,230,0.1)]">
+             <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Mode:</span>
              <StatusBadge status={isAutoMode ? 'active' : 'idle'} label={isAutoMode ? 'Auto' : 'Manual'} />
           </div>
           <button 
             onClick={toggleAutoMode}
-            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
+            className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all ${
               isAutoMode 
                 ? 'bg-amber-50 text-amber-600 border border-amber-200 hover:bg-amber-100' 
                 : 'bg-[#0073e6] text-white shadow-lg shadow-blue-500/20 hover:bg-[#005bb5]'
             }`}
           >
-            {isAutoMode ? 'Switch to Manual' : 'Switch to Auto'}
+            {isAutoMode ? 'Manual' : 'Auto Mode'}
           </button>
         </div>
       </div>
@@ -53,7 +53,7 @@ const IrrigationControl: React.FC = () => {
         {/* Left: Visualizer & Soil Stats */}
         <div className="lg:col-span-2 space-y-6">
           {/* Pump Animation Panel */}
-          <div className="glass rounded-[2rem] p-8 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)] relative overflow-hidden h-[400px] flex flex-col items-center justify-center">
+          <div className="glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)] relative overflow-hidden h-[300px] md:h-[400px] flex flex-col items-center justify-center">
             {/* Background water wave animation */}
             <AnimatePresence>
               {data.irrigationMotor && (
