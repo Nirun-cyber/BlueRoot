@@ -25,14 +25,7 @@ const navItems = [
   { to: '/about',        icon: Info,            label: 'About' },
 ];
 
-const sidebarVariants = {
-  hidden: { opacity: 0, x: -24 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, staggerChildren: 0.07, delayChildren: 0.15 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, x: -16 },
-  show:   { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
-};
+
 
 import { useSidebar } from '../context/SidebarContext';
 
@@ -88,7 +81,7 @@ const Sidebar: React.FC = () => {
               </p>
 
               {navItems.map((item) => (
-                <motion.div key={item.to} variants={itemVariants}>
+                <motion.div key={item.to}>
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}

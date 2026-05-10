@@ -32,6 +32,10 @@ export interface SensorContextType {
     tdsMax: number;
   };
   isAutoMode: boolean;
+  pushNotifications: boolean;
+  setPushNotifications: (val: boolean) => void;
+  emailAlerts: boolean;
+  setEmailAlerts: (val: boolean) => void;
   toggleIrrigation: () => void;
   toggleFertigation: () => void;
   updateThresholds: (newThresholds: Partial<SensorContextType['thresholds']>) => void;
