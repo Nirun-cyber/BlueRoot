@@ -5,7 +5,6 @@ import {
   FlaskConical, 
   Waves, 
   AlertTriangle,
-  Leaf,
   TrendingUp,
   Wifi
 } from 'lucide-react';
@@ -91,12 +90,7 @@ const HomeDashboard: React.FC = () => {
         <div className="relative z-10 text-white">
           {/* Status row */}
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <motion.div
-              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3, type: 'spring' }}
-              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-            >
-              <Leaf size={12} /> AI Insight Node
-            </motion.div>
+
             <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full text-xs font-bold">
               <div className="relative w-2 h-2">
                 <div className="absolute inset-0 bg-green-300 rounded-full live-ping" />
