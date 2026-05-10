@@ -6,13 +6,11 @@ import {
   Plus, 
   FlaskConical, 
   Zap,
-  CheckCircle2,
-  MoreVertical,
-  X,
-  Timer,
   Trash2,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Timer,
+  X
 } from 'lucide-react';
 import { useSensors } from '../context/SensorContext';
 import { StatusBadge } from '../components/Common';
@@ -129,9 +127,6 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
 
 const FertigationScheduler: React.FC = () => {
   const { data, toggleFertigation } = useSensors();
-
-  // Ref to trigger the native time picker on container click
-  const timeInputRef = useRef<HTMLInputElement>(null);
 
   // ------ Active cycle countdown (tracks the running schedule) ------
   const [activeTimeLeft, setActiveTimeLeft] = useState(0);
