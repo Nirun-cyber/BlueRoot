@@ -211,27 +211,25 @@ const HomeDashboard: React.FC = () => {
                 <XAxis dataKey="time" stroke="rgba(0,0,0,0.15)" fontSize={11} tickLine={false} axisLine={false} dy={8} />
                 <YAxis stroke="rgba(0,0,0,0.15)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{
-                    background: 'rgba(15, 23, 42, 0.95)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '16px',
-                    boxShadow: '0 12px 48px rgba(0,0,0,0.5)',
-                    padding: '12px 16px',
-                  }}
-                  itemStyle={{ 
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    padding: '2px 0'
-                  }}
-                  labelStyle={{
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    fontWeight: 800,
-                    fontSize: '10px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    marginBottom: '8px'
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-slate-900/95 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl min-w-[140px]">
+                          <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">
+                            {label}
+                          </p>
+                          <div className="space-y-1.5">
+                            {payload.map((item: any, index: number) => (
+                              <div key={index} className="flex items-center justify-between gap-4">
+                                <span className="text-[11px] font-bold text-white/70">{item.name}:</span>
+                                <span className="text-sm font-black text-white">{item.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
                   cursor={{ stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 1.5 }}
                 />
