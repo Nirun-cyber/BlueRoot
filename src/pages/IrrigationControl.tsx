@@ -60,7 +60,7 @@ const IrrigationControl: React.FC = () => {
         {/* Left: Visualizer & Soil Stats */}
         <div className="lg:col-span-2 space-y-6">
           {/* Pump Animation Panel */}
-          <div className="glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)] relative overflow-hidden h-[300px] md:h-[400px] flex flex-col items-center justify-center">
+          <div className="glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)] relative overflow-hidden h-[300px] md:h-[400px] flex flex-col items-center justify-center bg-gradient-to-b from-transparent to-blue-500/5">
             {/* Background water wave animation */}
             <AnimatePresence>
               {data.irrigationMotor && (
@@ -68,60 +68,142 @@ const IrrigationControl: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 pointer-events-none"
+                  className="absolute inset-0 pointer-events-none overflow-hidden"
                 >
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(4)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute bottom-0 w-full h-24 bg-blue-500/5 rounded-full"
-                      animate={{ y: [0, -20, 0], scaleX: [1, 1.1, 1] }}
-                      transition={{ duration: 2 + i * 0.5, repeat: Infinity, delay: i * 0.3 }}
-                      style={{ bottom: `${i * 20}px` }}
+                      className="absolute bottom-0 w-[200%] h-40 bg-blue-500/10 rounded-[40%] left-[-50%]"
+                      animate={{ 
+                        rotate: 360,
+                        y: [0, -10, 0]
+                      }}
+                      transition={{ 
+                        rotate: { duration: 10 + i * 2, repeat: Infinity, ease: "linear" },
+                        y: { duration: 3 + i, repeat: Infinity, ease: "easeInOut" }
+                      }}
+                      style={{ 
+                        bottom: `${-20 + i * 15}px`,
+                        opacity: 0.3 - i * 0.05
+                      }}
+                    />
+                  ))}
+                  
+                  {/* Bubbles */}
+                  {[...Array(10)].map((_, i) => (
+                    <motion.div
+                      key={`bubble-${i}`}
+                      className="absolute bottom-0 w-2 h-2 bg-blue-400/30 rounded-full"
+                      initial={{ x: Math.random() * 400, y: 400, opacity: 0 }}
+                      animate={{ 
+                        y: [-20, -400], 
+                        opacity: [0, 0.6, 0],
+                        x: (Math.random() * 400) + (Math.sin(i) * 20)
+                      }}
+                      transition={{ 
+                        duration: 3 + Math.random() * 2, 
+                        repeat: Infinity, 
+                        delay: Math.random() * 5,
+                        ease: "easeOut"
+                      }}
                     />
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Main pump icon */}
+            {/* Main pump icon and Orbital Rings */}
             <div className="relative z-10 flex flex-col items-center">
-              <motion.div
-                animate={data.irrigationMotor ? { scale: [1, 1.05, 1] } : {}}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className={`w-32 h-32 rounded-3xl flex items-center justify-center mb-6 transition-all duration-500 ${
-                  data.irrigationMotor 
-                    ? 'bg-blue-500 text-white shadow-[0_0_40px_rgba(59,130,246,0.5)]' 
-                    : 'bg-slate-100 dark:bg-white/10 text-slate-300 dark:text-white/20'
-                }`}
+              <div className="relative mb-6">
+                {/* Rotating Rings */}
+                <AnimatePresence>
+                  {data.irrigationMotor && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ rotate: { duration: 8, repeat: Infinity, ease: "linear" }, opacity: { duration: 0.5 } }}
+                        className="absolute inset-[-20px] border-2 border-dashed border-blue-500/30 rounded-full"
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1, rotate: -360 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ rotate: { duration: 12, repeat: Infinity, ease: "linear" }, opacity: { duration: 0.5 } }}
+                        className="absolute inset-[-40px] border border-blue-500/10 rounded-full"
+                      />
+                    </>
+                  )}
+                </AnimatePresence>
+
+                <motion.div
+                  animate={data.irrigationMotor ? { 
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      '0 0 40px rgba(59,130,246,0.5)',
+                      '0 0 60px rgba(59,130,246,0.7)',
+                      '0 0 40px rgba(59,130,246,0.5)'
+                    ]
+                  } : {}}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className={`w-32 h-32 rounded-[2.5rem] flex items-center justify-center transition-all duration-700 relative z-20 ${
+                    data.irrigationMotor 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-slate-100 dark:bg-white/10 text-slate-300 dark:text-white/20'
+                  }`}
+                >
+                  <Zap size={64} fill={data.irrigationMotor ? 'currentColor' : 'none'} className={data.irrigationMotor ? "animate-pulse" : ""} />
+                </motion.div>
+              </div>
+              
+              <motion.h3 
+                layout
+                className="text-2xl font-black text-slate-800 dark:text-white mb-2 tracking-tight"
               >
-                <Zap size={64} fill={data.irrigationMotor ? 'currentColor' : 'none'} />
-              </motion.div>
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('irrigation.mainPumpStation')}</h3>
+                {t('irrigation.mainPumpStation')}
+              </motion.h3>
+              
               <StatusBadge 
                 status={data.irrigationMotor ? 'active' : 'idle'} 
                 label={data.irrigationMotor ? t('irrigation.active') : t('irrigation.ready')} 
               />
             </div>
 
-
-            {/* Flow Stats */}
+            {/* Flow Stats with animations */}
             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
               <div className="space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('irrigation.flowRate')}</p>
-
-                <p className="text-2xl font-bold text-slate-800 dark:text-white">
-                  {data.irrigationMotor ? '12.5 L/min' : '0.0 L/min'}
-                </p>
+                <p className="text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-[0.2em]">{t('irrigation.flowRate')}</p>
+                <div className="flex items-baseline gap-1">
+                  <motion.p 
+                    key={data.irrigationMotor ? 'active-flow' : 'idle-flow'}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-3xl font-black text-slate-800 dark:text-white font-mono"
+                  >
+                    {data.irrigationMotor ? '12.5' : '0.0'}
+                  </motion.p>
+                  <span className="text-xs font-bold text-slate-400 uppercase">L/min</span>
+                </div>
               </div>
+              
               <div className="text-right space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('irrigation.pressure')}</p>
-
-                <p className="text-2xl font-bold text-slate-800 dark:text-white">
-                  {data.irrigationMotor ? '3.2 bar' : '0.0 bar'}
-                </p>
+                <p className="text-[10px] font-black text-slate-400 dark:text-white/40 uppercase tracking-[0.2em]">{t('irrigation.pressure')}</p>
+                <div className="flex items-baseline justify-end gap-1">
+                  <motion.p 
+                    key={data.irrigationMotor ? 'active-pressure' : 'idle-pressure'}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-3xl font-black text-slate-800 dark:text-white font-mono"
+                  >
+                    {data.irrigationMotor ? '3.2' : '0.0'}
+                  </motion.p>
+                  <span className="text-xs font-bold text-slate-400 uppercase">bar</span>
+                </div>
               </div>
             </div>
           </div>
+
 
           {/* Soil & Safety cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
