@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { 
@@ -16,6 +18,7 @@ import { useSensors } from '../context/SensorContext';
 import { StatusBadge } from '../components/Common';
 
 const AlertsLogs: React.FC = () => {
+  const { t } = useTranslation();
   const { 
     alerts, 
     logs, 
@@ -159,10 +162,11 @@ const AlertsLogs: React.FC = () => {
         <div>
           <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
             <Bell size={32} className="text-red-500 shrink-0" />
-            Alerts & Logs
+            {t('alerts.title')}
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Historical record of system events</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">{t('alerts.subtitle')}</p>
         </div>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -171,8 +175,9 @@ const AlertsLogs: React.FC = () => {
           {/* Alerts panel */}
           <div className="glass rounded-[1.5rem] md:rounded-[2rem] border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] overflow-hidden">
             <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
-              <h3 className="font-bold text-slate-800 dark:text-white">Recent Alerts</h3>
+              <h3 className="font-bold text-slate-800 dark:text-white">{t('alerts.recentAlerts')}</h3>
               <button className="text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 p-2 rounded-lg transition-all">
+
                 <Trash2 size={18} />
               </button>
             </div>
@@ -199,9 +204,10 @@ const AlertsLogs: React.FC = () => {
               ))}
               {alerts.length === 0 && (
                 <div className="p-12 text-center text-slate-400 dark:text-white/40 font-medium">
-                  ✓ No active alerts. System is performing optimally.
+                  {t('alerts.noActiveAlerts')}
                 </div>
               )}
+
             </div>
           </div>
 
@@ -217,10 +223,11 @@ const AlertsLogs: React.FC = () => {
                     <div className="w-16 text-xs font-bold text-slate-400 dark:text-white/40 shrink-0">{log.timestamp.split(' ')[0]}</div>
                     <div className="flex-1 flex items-center gap-2 flex-wrap">
                       <span className={`w-2 h-2 rounded-full shrink-0 ${log.type === 'irrigation' ? 'bg-blue-500' : 'bg-purple-500'}`}></span>
-                      <span className="font-bold uppercase tracking-wider text-[10px] text-slate-600 dark:text-white/60">{log.type}</span>
-                      <span className="text-slate-500 dark:text-white/60">system was triggered to</span>
-                      <span className={`font-bold ${log.action === 'START' ? 'text-[#1e9a4e]' : 'text-red-500'}`}>{log.action}</span>
+                      <span className="font-bold uppercase tracking-wider text-[10px] text-slate-600 dark:text-white/60">{log.type === 'irrigation' ? t('nav.irrigation') : t('nav.fertigation')}</span>
+                      <span className="text-slate-500 dark:text-white/60">{t('alerts.systemTriggered')}</span>
+                      <span className={`font-bold ${log.action === 'START' ? 'text-[#1e9a4e]' : 'text-red-500'}`}>{log.action === 'START' ? t('fertigation.on') : t('fertigation.off')}</span>
                     </div>
+
                   </div>
                 ))}
                 {logs.length === 0 && (
@@ -237,25 +244,25 @@ const AlertsLogs: React.FC = () => {
           <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] bg-green-50/30 dark:bg-[#1e9a4e]/5">
             <h4 className="font-bold mb-4 flex items-center gap-2 text-slate-800 dark:text-white">
               <Download size={18} className="text-[#1e9a4e]" />
-              Report Generation
+              {t('alerts.reportGeneration')}
             </h4>
             <p className="text-xs text-slate-500 dark:text-white/60 mb-6 leading-relaxed">
-              Generate detailed PDF reports of all alerts and activity for the past 30 days.
+              {t('alerts.reportDesc')}
             </p>
             <button 
               onClick={handleDownloadReport}
               className="w-full py-3 rounded-xl bg-[#1e9a4e] text-white font-bold text-sm shadow-lg shadow-[#1e9a4e]/20 hover:bg-[#187a3e] transition-all"
             >
-              Download Monthly Report
+              {t('alerts.downloadReport')}
             </button>
           </div>
 
           <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
-            <h4 className="font-bold mb-4 text-slate-800 dark:text-white">Notification Settings</h4>
+            <h4 className="font-bold mb-4 text-slate-800 dark:text-white">{t('alerts.notificationSettings')}</h4>
             <div className="space-y-4">
               {[
-                { label: 'Push Notifications', enabled: pushNotifications, toggle: () => setPushNotifications(!pushNotifications) },
-                { label: 'Email Alerts', enabled: emailAlerts, toggle: () => setEmailAlerts(!emailAlerts) },
+                { label: t('alerts.pushNotifications'), enabled: pushNotifications, toggle: () => setPushNotifications(!pushNotifications) },
+                { label: t('alerts.emailAlerts'), enabled: emailAlerts, toggle: () => setEmailAlerts(!emailAlerts) },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between py-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-white/70">{item.label}</span>
@@ -272,13 +279,13 @@ const AlertsLogs: React.FC = () => {
 
           {/* Summary stats */}
           <div className="glass rounded-3xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
-            <h4 className="font-bold mb-4 text-slate-800 dark:text-white">Alert Summary</h4>
+            <h4 className="font-bold mb-4 text-slate-800 dark:text-white">{t('alerts.alertSummary')}</h4>
             <div className="space-y-3">
               {[
-                { label: 'Errors', count: alerts.filter(a => a.type === 'error').length, color: 'text-red-500 bg-red-50 dark:bg-red-500/10' },
-                { label: 'Warnings', count: alerts.filter(a => a.type === 'warning').length, color: 'text-amber-500 bg-amber-50 dark:bg-amber-500/10' },
-                { label: 'Info', count: alerts.filter(a => a.type === 'info').length, color: 'text-blue-500 bg-blue-50 dark:bg-blue-500/10' },
-                { label: 'Resolved', count: alerts.filter(a => a.type === 'success').length, color: 'text-[#1e9a4e] bg-green-50 dark:bg-[#1e9a4e]/10' },
+                { label: t('alerts.errors'), count: alerts.filter(a => a.type === 'error').length, color: 'text-red-500 bg-red-50 dark:bg-red-500/10' },
+                { label: t('alerts.warnings'), count: alerts.filter(a => a.type === 'warning').length, color: 'text-amber-500 bg-amber-50 dark:bg-amber-500/10' },
+                { label: t('alerts.info'), count: alerts.filter(a => a.type === 'info').length, color: 'text-blue-500 bg-blue-50 dark:bg-blue-500/10' },
+                { label: t('alerts.resolved'), count: alerts.filter(a => a.type === 'success').length, color: 'text-[#1e9a4e] bg-green-50 dark:bg-[#1e9a4e]/10' },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between">
                   <span className="text-sm text-slate-500 dark:text-white/60">{item.label}</span>
@@ -287,6 +294,7 @@ const AlertsLogs: React.FC = () => {
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { motion } from 'framer-motion';
 import { 
   Activity, 
@@ -31,7 +33,9 @@ const mockTrendData = [
 ];
 
 const WaterQuality: React.FC = () => {
+  const { t } = useTranslation();
   const { data, thresholds } = useSensors();
+
 
   const isPhSafe = data.ph >= thresholds.phMin && data.ph <= thresholds.phMax;
   const isTdsSafe = data.tds <= thresholds.tdsMax;
@@ -43,9 +47,10 @@ const WaterQuality: React.FC = () => {
         <div>
           <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
             <Activity size={32} className="text-agri-green shrink-0" />
-            Water Quality
+            {t('waterQuality.title')}
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Real-time pH and TDS analysis</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">{t('waterQuality.subtitle')}</p>
+
         </div>
         <div className={`flex items-center gap-4 px-6 py-3 rounded-2xl border ${isQualitySafe ? 'bg-agri-green/10 border-agri-green/20 text-agri-green' : 'bg-red-500/10 border-red-500/20 text-red-500'} transition-all duration-500`}>
            {isQualitySafe ? <ShieldCheck size={24} /> : <AlertTriangle size={24} className="animate-bounce" />}
@@ -66,16 +71,16 @@ const WaterQuality: React.FC = () => {
                    <FlaskConical size={24} />
                 </div>
                 <div>
-                   <h3 className="text-xl font-bold text-slate-800 dark:text-white">Acidity (pH)</h3>
+                   <h3 className="text-xl font-bold text-slate-800 dark:text-white">{t('waterQuality.acidity')}</h3>
                    <StatusBadge status={isPhSafe ? 'healthy' : 'error'} />
                 </div>
              </div>
-             <p className="text-sm font-bold text-slate-400 dark:text-white/40">Safe Range: {thresholds.phMin}-{thresholds.phMax}</p>
+             <p className="text-sm font-bold text-slate-400 dark:text-white/40">{t('waterQuality.safeRange')} {thresholds.phMin}-{thresholds.phMax}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center py-6">
              <div className="text-5xl md:text-6xl font-black mb-2 text-purple-500">{data.ph.toFixed(1)}</div>
-             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Live pH Value</p>
+             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('waterQuality.livePhValue')}</p>
           </div>
 
           <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full relative overflow-hidden">
@@ -89,9 +94,9 @@ const WaterQuality: React.FC = () => {
           </div>
           
           <div className="flex justify-between text-[10px] font-black text-slate-300 dark:text-white/20 uppercase">
-             <span>Acidic</span>
-             <span>Neutral</span>
-             <span>Alkaline</span>
+             <span>{t('waterQuality.acidic')}</span>
+             <span>{t('waterQuality.neutral')}</span>
+             <span>{t('waterQuality.alkaline')}</span>
           </div>
         </div>
 
@@ -104,16 +109,16 @@ const WaterQuality: React.FC = () => {
                    <Waves size={24} />
                 </div>
                 <div>
-                   <h3 className="text-xl font-bold text-slate-800 dark:text-white">Salinity (TDS)</h3>
+                   <h3 className="text-xl font-bold text-slate-800 dark:text-white">{t('waterQuality.salinityTds')}</h3>
                    <StatusBadge status={isTdsSafe ? 'healthy' : 'error'} />
                 </div>
              </div>
-             <p className="text-sm font-bold text-slate-400 dark:text-white/40">Threshold: &lt;{thresholds.tdsMax}ppm</p>
+             <p className="text-sm font-bold text-slate-400 dark:text-white/40">{t('waterQuality.threshold')} &lt;{thresholds.tdsMax}ppm</p>
           </div>
 
           <div className="flex flex-col items-center justify-center py-6">
              <div className="text-4xl md:text-6xl font-black mb-2 text-agri-blue truncate max-w-full">{data.tds.toFixed(4)}</div>
-             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Parts Per Million</p>
+             <p className="text-xs md:text-sm font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('waterQuality.ppmTitle')}</p>
           </div>
 
           <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full relative overflow-hidden">
@@ -124,9 +129,9 @@ const WaterQuality: React.FC = () => {
           </div>
 
           <div className="flex justify-between text-[10px] font-black text-slate-300 dark:text-white/20 uppercase">
-             <span>Fresh</span>
-             <span>Brackish</span>
-             <span>Saline</span>
+             <span>{t('waterQuality.fresh')}</span>
+             <span>{t('waterQuality.brackish')}</span>
+             <span>{t('waterQuality.saline')}</span>
           </div>
         </div>
       </div>
@@ -135,17 +140,17 @@ const WaterQuality: React.FC = () => {
       <div className="glass rounded-[2rem] p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] transition-shadow">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
-               <h3 className="text-xl font-bold text-slate-800 dark:text-white">Water Parameter Trends</h3>
-               <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest mt-1">Detailed Analysis Over 24h</p>
+               <h3 className="text-xl font-bold text-slate-800 dark:text-white">{t('waterQuality.trendsTitle')}</h3>
+               <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest mt-1">{t('waterQuality.trendsSubtitle')}</p>
             </div>
             <div className="flex flex-wrap gap-4">
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-white/60">pH Levels</span>
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-white/60">{t('waterQuality.phLevels')}</span>
                </div>
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-agri-blue"></div>
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-white/60">Salinity (ppm)</span>
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-white/60">{t('waterQuality.salinityPpm')}</span>
                </div>
             </div>
          </div>
@@ -181,31 +186,32 @@ const WaterQuality: React.FC = () => {
          <div className="glass rounded-2xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] transition-shadow">
             <div className="flex items-center gap-3 mb-3 text-agri-green">
                <ShieldCheck size={20} />
-               <h4 className="font-bold text-slate-800 dark:text-white">Safe Irrigation</h4>
+               <h4 className="font-bold text-slate-800 dark:text-white">{t('waterQuality.safeIrrigation')}</h4>
             </div>
             <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
-               Irrigation is currently <span className={isQualitySafe ? 'text-agri-green font-bold' : 'text-red-500 font-bold'}>{isQualitySafe ? 'ALLOWED' : 'DISABLED'}</span> based on real-time water quality metrics.
+               {t('waterQuality.irrigationStatus', { status: isQualitySafe ? t('waterQuality.allowed') : t('waterQuality.disabled') })}
             </p>
          </div>
          <div className="glass rounded-2xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] transition-shadow">
             <div className="flex items-center gap-3 mb-3 text-agri-blue">
                <Droplet size={20} />
-               <h4 className="font-bold text-slate-800 dark:text-white">Water Source</h4>
+               <h4 className="font-bold text-slate-800 dark:text-white">{t('waterQuality.waterSource')}</h4>
             </div>
             <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
-               Connected to <span className="font-bold text-slate-700 dark:text-white">North Well Station 2</span>. Last maintenance: April 12th, 2026.
+               {t('waterQuality.connectedTo')} <span className="font-bold text-slate-700 dark:text-white">{t('waterQuality.northWell')}</span>. {t('waterQuality.lastMaintenance')}
             </p>
          </div>
          <div className="glass rounded-2xl p-6 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)] transition-shadow">
             <div className="flex items-center gap-3 mb-3 text-purple-500">
                <Info size={20} />
-               <h4 className="font-bold text-slate-800 dark:text-white">Quality Standard</h4>
+               <h4 className="font-bold text-slate-800 dark:text-white">{t('waterQuality.qualityStandard')}</h4>
             </div>
             <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed">
-               Current quality meets <span className="font-bold text-slate-700 dark:text-white">ISO-9001 Agri-Standard</span> for open-field organic cultivation.
+               {t('waterQuality.meetsStandard', { standard: t('waterQuality.isoStandard') })}
             </p>
          </div>
       </div>
+
     </div>
   );
 };

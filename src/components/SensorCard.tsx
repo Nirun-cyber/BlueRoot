@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 
 interface SensorCardProps {
@@ -36,6 +37,7 @@ function useCountUp(target: number, duration = 800) {
 }
 
 const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon, color, trend, isWarning }) => {
+  const { t } = useTranslation();
   const numericValue = typeof value === 'number' ? value : parseFloat(value as string) || 0;
   const animated = useCountUp(numericValue, 900);
   const displayValue = typeof value === 'number'
@@ -106,7 +108,7 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
         >
           <div className="w-1.5 h-1.5 rounded-full bg-red-500 pulse-red" />
           <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">
-            Threshold Exceeded
+            {t('dashboard.thresholdExceeded')}
           </span>
         </motion.div>
       )}
@@ -115,3 +117,4 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
 };
 
 export default SensorCard;
+

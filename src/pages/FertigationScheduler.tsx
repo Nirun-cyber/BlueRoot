@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 import { 
   Calendar, 
   Clock, 
@@ -27,7 +29,9 @@ interface Schedule {
 
 // ------ Custom Time Picker Component ------
 const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+
   const [h, m] = value ? value.split(':') : ['00', '00'];
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
@@ -71,7 +75,7 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
             >
               {/* Hours Column */}
               <div className="flex-1 flex flex-col overflow-hidden">
-                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">Hours</p>
+                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">{t('fertigation.hours') || 'Hours'}</p>
                 <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
                   {hours.map(hour => (
                     <button
@@ -93,7 +97,7 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
 
               {/* Minutes Column */}
               <div className="flex-1 flex flex-col overflow-hidden">
-                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">Minutes</p>
+                <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">{t('fertigation.minutes') || 'Minutes'}</p>
                 <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
                   {minutes.map(minute => (
                     <button
@@ -115,8 +119,9 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
                 onClick={() => setIsOpen(false)}
                 className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-[#4caf50] text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl"
               >
-                Confirm Time
+                {t('fertigation.confirm')}
               </button>
+
             </motion.div>
           </>
         )}
@@ -126,7 +131,9 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
 };
 
 const FertigationScheduler: React.FC = () => {
+  const { t } = useTranslation();
   const { data, toggleFertigation } = useSensors();
+
 
   // ------ Active cycle countdown (tracks the running schedule) ------
   const [activeTimeLeft, setActiveTimeLeft] = useState(0);
@@ -253,9 +260,10 @@ const FertigationScheduler: React.FC = () => {
                       <Timer size={20} />
                     </div>
                     <div>
-                      <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-white">New Schedule</h3>
-                      <p className="text-[10px] md:text-xs text-slate-400 dark:text-white/40">Set time & duration</p>
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-white">{t('fertigation.newSchedule')}</h3>
+                      <p className="text-[10px] md:text-xs text-slate-400 dark:text-white/40">{t('fertigation.setTimeDuration')}</p>
                     </div>
+
                   </div>
                   <button
                     onClick={() => setShowModal(false)}
@@ -270,11 +278,11 @@ const FertigationScheduler: React.FC = () => {
                   {/* Cycle Name */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-white/40">
-                      Cycle Name <span className="text-slate-300">(optional)</span>
+                      {t('fertigation.cycleName')} <span className="text-slate-300">{t('fertigation.optional')}</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Morning NPK Boost"
+                      placeholder={t('fertigation.placeholderName')}
                       value={newName}
                       onChange={e => setNewName(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-300 dark:placeholder-white/20 focus:outline-none focus:border-purple-400 transition-colors"
@@ -288,14 +296,15 @@ const FertigationScheduler: React.FC = () => {
                       onChange={setNewTime}
                     />
                     <p className="text-[10px] text-slate-400 dark:text-white/30">
-                      Motor will auto-start at this time exactly.
+                      {t('fertigation.startTimeHint')}
                     </p>
+
                   </div>
 
                   {/* Duration */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-white/40">
-                      Duration (minutes) <span className="text-red-400">*</span>
+                      {t('fertigation.duration')} <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
                       <Zap size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -310,7 +319,7 @@ const FertigationScheduler: React.FC = () => {
                       />
                     </div>
                     <p className="text-[10px] text-slate-400 dark:text-white/30">
-                      Motor will auto-stop after this many minutes.
+                      {t('fertigation.durationHint')}
                     </p>
                   </div>
 
@@ -319,9 +328,10 @@ const FertigationScheduler: React.FC = () => {
                     <div className="flex items-start gap-3 p-4 bg-green-50 dark:bg-green-500/10 rounded-2xl border border-green-100 dark:border-green-500/20">
                       <FlaskConical size={16} className="text-[#4caf50] mt-0.5 shrink-0" />
                       <p className="text-xs text-green-700 dark:text-green-300 font-medium leading-relaxed">
-                        Fertigation motor will turn <strong>ON</strong> at <strong>{newTime}</strong> and automatically turn <strong>OFF</strong> after <strong>{newDuration} minute{Number(newDuration) !== 1 ? 's' : ''}</strong>.
+                        {t('fertigation.infoBox', { time: newTime, duration: newDuration })}
                       </p>
                     </div>
+
                   )}
                 </div>
 
@@ -331,15 +341,16 @@ const FertigationScheduler: React.FC = () => {
                     onClick={() => setShowModal(false)}
                     className="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 font-bold text-sm hover:bg-slate-200 dark:hover:bg-white/10 transition-all"
                   >
-                    Cancel
+                    {t('fertigation.cancel')}
                   </button>
                   <button
                     onClick={handleAddSchedule}
                     disabled={!newTime || !newDuration}
                     className="flex-1 py-3 rounded-xl bg-[#4caf50] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:bg-[#388e3c] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
-                    Add Schedule
+                    {t('fertigation.addSchedule')}
                   </button>
+
                 </div>
               </div>
               </motion.div>
@@ -353,16 +364,16 @@ const FertigationScheduler: React.FC = () => {
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
             <Calendar size={32} className="text-[#4caf50]" />
-            Fertigation Scheduler
+            {t('fertigation.title')}
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Schedule and monitor nutrient distribution</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">{t('fertigation.subtitle')}</p>
         </div>
         <button
           onClick={handleOpenModal}
           className="bg-[#4caf50] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-green-500/20 flex items-center gap-2 hover:bg-[#388e3c] transition-all"
         >
           <Plus size={18} />
-          New Schedule
+          {t('fertigation.newSchedule')}
         </button>
       </div>
 
@@ -386,7 +397,7 @@ const FertigationScheduler: React.FC = () => {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Remaining</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('fertigation.remaining')}</p>
                     <p className="text-4xl font-bold font-mono text-slate-800 dark:text-white">{formatTime(activeTimeLeft)}</p>
                   </div>
                 </div>
@@ -395,22 +406,22 @@ const FertigationScheduler: React.FC = () => {
                   <div>
                     <StatusBadge
                       status="active"
-                      label="Cycle In Progress"
+                      label={t('fertigation.cycleInProgress')}
                     />
                     <h3 className="text-2xl font-bold text-slate-800 dark:text-white mt-2">
                       {totalRunning.name}
                     </h3>
                     <p className="text-sm text-slate-500 dark:text-white/60 mt-1">
-                      Running for {totalRunning.duration} min — motor stops automatically.
+                      {t('fertigation.runningHint', { duration: totalRunning.duration })}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Start Time</p>
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">{t('fertigation.startTime')}</p>
                       <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning.time}</p>
                     </div>
                     <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Duration</p>
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">{t('fertigation.duration').split(' ')[0]}</p>
                       <p className="font-bold text-sm text-slate-800 dark:text-white">{totalRunning.duration} min</p>
                     </div>
                   </div>
@@ -456,15 +467,15 @@ const FertigationScheduler: React.FC = () => {
                 <div className="flex-1 text-center md:text-left space-y-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-500/10 rounded-full border border-blue-100 dark:border-blue-500/20">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">System Standby</span>
+                    <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">{t('fertigation.systemStandby')}</span>
                   </div>
                   <h3 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-tight">
-                    Waiting for the <br/> 
-                    <span className="text-[#4caf50]">Next Nutrition Cycle</span>
+                    {t('fertigation.waitingTitle')}
                   </h3>
                   <p className="text-sm text-slate-400 dark:text-white/30 font-medium max-w-sm">
-                    All sensor nodes are healthy. The automated delivery system will engage precisely at the next scheduled timestamp.
+                    {t('fertigation.systemHealthy')}
                   </p>
+
                   
                   {schedules.find(s => s.status === 'pending') && (
                     <div className="inline-flex items-center gap-4 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
@@ -472,7 +483,7 @@ const FertigationScheduler: React.FC = () => {
                         <Clock size={20} />
                       </div>
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest">Upcoming Node</p>
+                        <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest">{t('fertigation.upcomingNode')}</p>
                         <p className="text-sm font-bold text-slate-700 dark:text-white">
                           {schedules.find(s => s.status === 'pending')?.name} @ {schedules.find(s => s.status === 'pending')?.time}
                         </p>
@@ -488,7 +499,7 @@ const FertigationScheduler: React.FC = () => {
           <div className="glass rounded-3xl p-8 border border-[#4caf50]/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
               <Clock size={20} className="text-slate-400" />
-              Upcoming Cycles
+              {t('fertigation.upcomingCycles')}
             </h3>
             <div className="space-y-4">
               {schedules.filter(s => s.status === 'pending').map((s) => (
@@ -507,7 +518,7 @@ const FertigationScheduler: React.FC = () => {
                           <Clock size={10} /> {s.time}
                         </span>
                         <span className="text-[10px] font-bold text-slate-400 dark:text-white/40 flex items-center gap-1">
-                          <Zap size={10} /> {s.duration} min
+                          <Zap size={10} /> {s.duration} {t('fertigation.duration').split(' ')[0].toLowerCase()}
                         </span>
                       </div>
                     </div>
@@ -515,7 +526,7 @@ const FertigationScheduler: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <StatusBadge
                       status="idle"
-                      label="Pending"
+                      label={t('fertigation.pending')}
                     />
                     <button
                       onClick={() => handleDelete(s.id)}
@@ -529,9 +540,10 @@ const FertigationScheduler: React.FC = () => {
 
               {schedules.filter(s => s.status === 'pending').length === 0 && (
                 <div className="text-center py-8 text-slate-400 dark:text-white/30 text-sm italic">
-                  No upcoming cycles scheduled.
+                  {t('fertigation.noUpcoming')}
                 </div>
               )}
+
             </div>
           </div>
         </div>

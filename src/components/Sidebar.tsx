@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { 
   LayoutDashboard, 
   Droplets, 
@@ -15,15 +16,16 @@ import {
 import logoLight from '../assets/logo-full.png';
 import logoDark from '../assets/logo-dark.png';
 
-const navItems = [
-  { to: '/',             icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/irrigation',   icon: Droplets,        label: 'Irrigation' },
-  { to: '/fertigation',  icon: Calendar,        label: 'Fertigation' },
-  { to: '/water-quality',icon: Activity,        label: 'Water Quality' },
-  { to: '/alerts',       icon: Bell,            label: 'Alerts & Logs' },
-  { to: '/settings',     icon: Settings,        label: 'Settings' },
-  { to: '/about',        icon: Info,            label: 'About' },
+const getNavItems = (t: any) => [
+  { to: '/',             icon: LayoutDashboard, label: t('nav.dashboard') },
+  { to: '/irrigation',   icon: Droplets,        label: t('nav.irrigation') },
+  { to: '/fertigation',  icon: Calendar,        label: t('nav.fertigation') },
+  { to: '/water-quality',icon: Activity,        label: t('nav.waterQuality') },
+  { to: '/alerts',       icon: Bell,            label: t('nav.alerts') },
+  { to: '/settings',     icon: Settings,        label: t('nav.settings') },
+  { to: '/about',        icon: Info,            label: t('nav.about') },
 ];
+
 
 
 
@@ -32,6 +34,9 @@ import { useSidebar } from '../context/SidebarContext';
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
   const { isOpen, closeSidebar } = useSidebar();
+  const { t } = useTranslation();
+  const navItems = getNavItems(t);
+
 
   return (
     <>
@@ -70,15 +75,17 @@ const Sidebar: React.FC = () => {
                   <span className="text-[#0073e6] dark:text-[#3b82f6]">Blue</span>
                   <span className="text-[#4caf50] dark:text-[#81c784]">Root</span>
                 </h1>
-                <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Smart Farm OS</p>
+                <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('sidebar.smartFarm')}</p>
               </div>
+
             </Link>
 
             {/* Nav */}
             <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
               <p className="px-4 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] mb-3">
-                Intelligence Menu
+                {t('sidebar.intelligenceMenu')}
               </p>
+
 
               {navItems.map((item) => (
                 <motion.div key={item.to}>
@@ -111,17 +118,18 @@ const Sidebar: React.FC = () => {
 
             {/* Bottom operator */}
             <div className="p-4 border-t border-slate-100 dark:border-white/5 whitespace-nowrap">
-              <p className="px-3 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] mb-3">Operator Node</p>
+              <p className="px-3 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] mb-3">{t('sidebar.operatorNode')}</p>
               <div className="px-3 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-xs shadow-md shadow-blue-500/30 shrink-0">
-                  OA
+                <div className="min-w-9 w-fit px-2 h-9 rounded-2xl bg-[#0073e6] flex items-center justify-center text-white font-black text-[10px] shadow-md shadow-blue-500/30 shrink-0">
+                  {t('navbar.admin')}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-800 dark:text-white">Admin User</p>
-                  <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">Farmer Node • Field Manager</p>
+                  <p className="text-xs font-bold text-slate-800 dark:text-white">{t('sidebar.adminUser')}</p>
+                  <p className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">{t('sidebar.fieldManager')}</p>
                 </div>
               </div>
             </div>
+
           </motion.aside>
         )}
       </AnimatePresence>

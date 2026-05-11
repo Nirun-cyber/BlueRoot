@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 import { 
   Droplets, 
   Activity, 
@@ -15,7 +17,9 @@ import { StatusBadge } from '../components/Common';
 import MotorStatusCard from '../components/MotorStatusCard';
 
 const IrrigationControl: React.FC = () => {
+  const { t } = useTranslation();
   const { data, logs, alerts, thresholds, isAutoMode, toggleIrrigation, toggleAutoMode } = useSensors();
+
 
   const isPhSafe = data.ph >= 6.0 && data.ph <= 7.5;
   const isTdsSafe = data.tds <= 1200;
@@ -27,15 +31,17 @@ const IrrigationControl: React.FC = () => {
         <div>
           <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
             <Droplets size={32} className="text-blue-500 shrink-0" />
-            Irrigation Control
+            {t('irrigation.title')}
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Manage water distribution</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">{t('irrigation.subtitle')}</p>
+
         </div>
         <div className="flex items-center gap-2 md:gap-4">
           <div className="flex-1 md:flex-none flex items-center gap-2 glass px-3 md:px-4 py-2 rounded-xl border border-blue-500/30 shadow-[0_0_15px_rgba(0,115,230,0.1)]">
-             <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">Mode:</span>
-             <StatusBadge status={isAutoMode ? 'active' : 'idle'} label={isAutoMode ? 'Auto' : 'Manual'} />
+             <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/40">{t('irrigation.mode')}</span>
+             <StatusBadge status={isAutoMode ? 'active' : 'idle'} label={isAutoMode ? t('irrigation.auto') : t('irrigation.manual')} />
           </div>
+
           <button 
             onClick={toggleAutoMode}
             className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all ${
@@ -44,8 +50,9 @@ const IrrigationControl: React.FC = () => {
                 : 'bg-[#0073e6] text-white shadow-lg shadow-blue-500/20 hover:bg-[#005bb5]'
             }`}
           >
-            {isAutoMode ? 'Manual' : 'Auto Mode'}
+            {isAutoMode ? t('irrigation.manual') : t('irrigation.autoMode')}
           </button>
+
         </div>
       </div>
 
@@ -89,23 +96,26 @@ const IrrigationControl: React.FC = () => {
               >
                 <Zap size={64} fill={data.irrigationMotor ? 'currentColor' : 'none'} />
               </motion.div>
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Main Pump Station</h3>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t('irrigation.mainPumpStation')}</h3>
               <StatusBadge 
                 status={data.irrigationMotor ? 'active' : 'idle'} 
-                label={data.irrigationMotor ? 'Irrigation Active' : 'System Ready'} 
+                label={data.irrigationMotor ? t('irrigation.active') : t('irrigation.ready')} 
               />
             </div>
+
 
             {/* Flow Stats */}
             <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
               <div className="space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Flow Rate</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('irrigation.flowRate')}</p>
+
                 <p className="text-2xl font-bold text-slate-800 dark:text-white">
                   {data.irrigationMotor ? '12.5 L/min' : '0.0 L/min'}
                 </p>
               </div>
               <div className="text-right space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Pressure</p>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('irrigation.pressure')}</p>
+
                 <p className="text-2xl font-bold text-slate-800 dark:text-white">
                   {data.irrigationMotor ? '3.2 bar' : '0.0 bar'}
                 </p>
@@ -118,12 +128,14 @@ const IrrigationControl: React.FC = () => {
             <div className="glass rounded-3xl p-6 border border-blue-500/40 shadow-[0_0_20px_rgba(0,115,230,0.15)]">
               <div className="flex items-center gap-3 mb-4 text-blue-500">
                 <Activity size={20} />
-                <h4 className="font-bold text-slate-800 dark:text-white">Soil Condition</h4>
+                <h4 className="font-bold text-slate-800 dark:text-white">{t('irrigation.soilCondition')}</h4>
               </div>
+
               <div className="flex items-baseline gap-2 mb-3">
                 <span className="text-4xl font-black text-slate-800 dark:text-white">{data.soilMoisture.toFixed(1)}%</span>
-                <span className="text-sm text-slate-400 dark:text-white/40">Moisture Content</span>
+                <span className="text-sm text-slate-400 dark:text-white/40">{t('irrigation.moistureContent')}</span>
               </div>
+
               <div className="w-full bg-slate-100 dark:bg-white/5 h-2 rounded-full overflow-hidden">
                 <motion.div 
                   animate={{ width: `${data.soilMoisture}%` }}
@@ -132,24 +144,28 @@ const IrrigationControl: React.FC = () => {
               </div>
               <div className="flex justify-between items-center mt-2">
                 <p className="text-[10px] text-slate-400 dark:text-white/40 font-medium">
-                  ON: {thresholds.moistureOn}% | OFF: {thresholds.moistureOff}%
+                  {t('irrigation.thresholds', { on: thresholds.moistureOn, off: thresholds.moistureOff })}
                 </p>
+
                 <p className="text-[10px] font-bold text-blue-500">
-                  {data.soilMoisture < thresholds.moistureOn ? '⚠ Below threshold' : data.soilMoisture > thresholds.moistureOff ? '✓ Saturated' : '✓ Within range'}
+                  {data.soilMoisture < thresholds.moistureOn ? t('irrigation.belowThreshold') : data.soilMoisture > thresholds.moistureOff ? t('irrigation.saturated') : t('irrigation.withinRange')}
                 </p>
+
               </div>
             </div>
 
             <div className="glass rounded-3xl p-6 border border-green-500/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">
               <div className={`flex items-center gap-3 mb-4 ${isPhSafe && isTdsSafe ? 'text-[#4caf50]' : 'text-red-500'}`}>
                 {isPhSafe && isTdsSafe ? <ShieldCheck size={20} /> : <AlertCircle size={20} />}
-                <h4 className="font-bold text-slate-800 dark:text-white">Safety Status</h4>
+                <h4 className="font-bold text-slate-800 dark:text-white">{t('irrigation.safetyStatus')}</h4>
               </div>
+
               <p className="text-sm text-slate-500 dark:text-white/60 mb-4 leading-relaxed">
                 {alerts.some(a => a.type === 'error') 
-                  ? 'Critical safety overrides active. Manual override required.' 
-                  : 'All safety parameters within nominal ranges. Auto-system engaged.'}
+                  ? t('irrigation.criticalOverride') 
+                  : t('irrigation.nominalRanges')}
               </p>
+
               <div className="flex gap-2 flex-wrap">
                 <StatusBadge status={isPhSafe ? 'healthy' : 'error'} label={`pH: ${data.ph.toFixed(1)}`} />
                 <StatusBadge status={isTdsSafe ? 'healthy' : 'error'} label={`TDS: ${data.tds.toFixed(0)}ppm`} />
@@ -174,10 +190,11 @@ const IrrigationControl: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
                 <History size={18} className="text-slate-400" />
-                Recent Activity
+                {t('irrigation.recentActivity')}
               </h4>
-              <button className="text-[10px] font-bold text-[#0073e6] uppercase hover:underline">View All</button>
+              <button className="text-[10px] font-bold text-[#0073e6] uppercase hover:underline">{t('irrigation.viewAll')}</button>
             </div>
+
             <div className="space-y-4">
               {logs.filter(l => l.type === 'irrigation').slice(0, 5).map(log => (
                 <div key={log.id} className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-3 last:border-0 last:pb-0">
@@ -186,16 +203,18 @@ const IrrigationControl: React.FC = () => {
                       {log.action === 'START' ? <Play size={12} /> : <Square size={12} />}
                     </div>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-tighter text-slate-700 dark:text-white">Pump {log.action}</p>
+                      <p className="text-xs font-bold uppercase tracking-tighter text-slate-700 dark:text-white">{t('irrigation.pumpStart').replace('START', log.action)}</p>
                       <p className="text-[10px] text-slate-400 dark:text-white/40">{log.timestamp}</p>
                     </div>
                   </div>
-                  <StatusBadge status={log.action === 'START' ? 'active' : 'idle'} label={log.action === 'START' ? 'ON' : 'OFF'} />
+                  <StatusBadge status={log.action === 'START' ? 'active' : 'idle'} label={log.action === 'START' ? t('fertigation.on') : t('fertigation.off')} />
                 </div>
+
               ))}
               {logs.filter(l => l.type === 'irrigation').length === 0 && (
-                <p className="text-center py-4 text-xs text-slate-400 dark:text-white/40">No activity logged yet.</p>
+                <p className="text-center py-4 text-xs text-slate-400 dark:text-white/40">{t('irrigation.noActivity')}</p>
               )}
+
             </div>
           </div>
 
@@ -203,8 +222,9 @@ const IrrigationControl: React.FC = () => {
           <div className="glass rounded-3xl p-6 border border-red-200 dark:border-red-500/20 bg-red-50/50 dark:bg-red-500/5">
             <h4 className="text-red-500 font-bold mb-3 flex items-center gap-2">
               <AlertCircle size={18} />
-              Critical Alerts
+              {t('irrigation.criticalAlerts')}
             </h4>
+
             <div className="space-y-2">
               {alerts.filter(a => a.type === 'error').slice(0, 2).map(alert => (
                 <div key={alert.id} className="text-[10px] text-red-500 font-medium p-2 rounded-lg border border-red-100 dark:border-red-500/10 bg-white dark:bg-transparent">
@@ -212,8 +232,9 @@ const IrrigationControl: React.FC = () => {
                 </div>
               ))}
               {alerts.filter(a => a.type === 'error').length === 0 && (
-                <p className="text-[10px] text-red-400 dark:text-red-500/40">No critical alerts detected.</p>
+                <p className="text-[10px] text-red-400 dark:text-red-500/40">{t('irrigation.noCriticalAlerts')}</p>
               )}
+
             </div>
           </div>
         </div>

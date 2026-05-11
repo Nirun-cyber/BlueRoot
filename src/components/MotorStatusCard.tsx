@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Power, PowerOff, Droplet, FlaskConical } from 'lucide-react';
 import LiquidPipe from './LiquidPipe';
@@ -13,6 +14,7 @@ interface MotorStatusCardProps {
 }
 
 const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle, disabled, isAutoMode, onToggleAutoMode }) => {
+  const { t } = useTranslation();
   const isIrrigation = type === 'irrigation';
   
   return (
@@ -23,8 +25,12 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
             {isIrrigation ? <Droplet size={24} /> : <FlaskConical size={24} />}
           </div>
           <div>
-            <h4 className="text-slate-800 dark:text-white font-bold capitalize">{type} Motor</h4>
-            <p className="text-[10px] text-slate-400 dark:text-white/40 uppercase font-bold tracking-widest">System {type.charAt(0).toUpperCase()}</p>
+            <h4 className="text-slate-800 dark:text-white font-bold capitalize">
+              {isIrrigation ? t('nav.irrigation') : t('nav.fertigation')} {t('fertigation.motor')}
+            </h4>
+            <p className="text-[10px] text-slate-400 dark:text-white/40 uppercase font-bold tracking-widest">
+              {t('fertigation.system')} {isIrrigation ? t('nav.irrigation') : t('nav.fertigation')}
+            </p>
           </div>
         </div>
         <div className={`w-3 h-3 rounded-full ${isOn ? (isIrrigation ? 'bg-blue-500 animate-pulse' : 'bg-[#4caf50] animate-pulse') : 'bg-slate-200 dark:bg-white/10'}`}></div>
@@ -35,10 +41,10 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
         <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 mb-4">
           <div>
             <span className="text-sm text-slate-600 dark:text-white/70 font-semibold">
-              {isAutoMode ? 'Auto Mode' : 'Manual Mode'}
+              {isAutoMode ? t('fertigation.autoMode') : t('fertigation.manualMode')}
             </span>
             <p className="text-[10px] text-slate-400 dark:text-white/40 font-medium">
-              {isAutoMode ? 'System controls irrigation' : 'You control irrigation'}
+              {isAutoMode ? t('fertigation.systemControls') : t('fertigation.youControl')}
             </p>
           </div>
           <button
@@ -59,9 +65,9 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
-          <span className="text-sm text-slate-500 dark:text-white/60 font-medium">Status</span>
+          <span className="text-sm text-slate-500 dark:text-white/60 font-medium">{t('fertigation.status')}</span>
           <span className={`text-sm font-bold ${isOn ? 'text-[#4caf50]' : 'text-slate-400 dark:text-white/40'}`}>
-            {isOn ? 'ACTIVE' : 'IDLE'}
+            {isOn ? t('fertigation.active') : t('fertigation.idle')}
           </span>
         </div>
 
@@ -77,15 +83,15 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
           }`}
         >
           {isOn ? <PowerOff size={20} /> : <Power size={20} />}
-          {isAutoMode && isIrrigation ? 'Auto-Managed' : isOn ? 'Stop Motor' : 'Start Motor'}
+          {isAutoMode && isIrrigation ? t('fertigation.autoManaged') : isOn ? t('fertigation.stopMotor') : t('fertigation.startMotor')}
         </button>
       </div>
       
       {isOn && (
         <div className="mt-4 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase tracking-wider">Live Consumption</p>
-            <span className="text-[10px] text-blue-500 font-bold uppercase animate-pulse">Flowing Active</span>
+            <p className="text-[10px] text-slate-400 dark:text-white/40 font-bold uppercase tracking-wider">{t('fertigation.liveConsumption')}</p>
+            <span className="text-[10px] text-blue-500 font-bold uppercase animate-pulse">{t('fertigation.flowingActive')}</span>
           </div>
           <LiquidPipe type={type} isActive={isOn} />
         </div>
@@ -95,4 +101,5 @@ const MotorStatusCard: React.FC<MotorStatusCardProps> = ({ type, isOn, onToggle,
 };
 
 export default MotorStatusCard;
+
 

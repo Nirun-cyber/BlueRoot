@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { motion } from 'framer-motion';
 import { 
   Settings as SettingsIcon, 
@@ -18,13 +20,14 @@ import { useTheme } from '../context/ThemeContext';
 import { useSensors } from '../context/SensorContext';
 
 const Settings: React.FC = () => {
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { thresholds, updateThresholds } = useSensors();
   const [localThresholds, setLocalThresholds] = useState(thresholds);
 
   const handleSave = () => {
     updateThresholds(localThresholds);
-    alert('Settings saved successfully!');
+    alert(t('settings.savedSuccess'));
   };
 
   const handleReset = () => {
@@ -32,10 +35,10 @@ const Settings: React.FC = () => {
   };
 
   const settingSections = [
-    { id: 'profile', icon: User, title: 'User Profile', desc: 'Manage your account and preferences' },
-    { id: 'system', icon: Cpu, title: 'System Configuration', desc: 'Hardware and connection settings' },
-    { id: 'notifications', icon: Bell, title: 'Notifications', desc: 'Control alert levels and methods' },
-    { id: 'security', icon: Lock, title: 'Security', desc: 'Access control and safety locks' },
+    { id: 'profile', icon: User, title: t('settings.userProfile'), desc: t('settings.userProfileDesc') },
+    { id: 'system', icon: Cpu, title: t('settings.systemConfig'), desc: t('settings.systemConfigDesc') },
+    { id: 'notifications', icon: Bell, title: t('settings.notifications'), desc: t('settings.notificationsDesc') },
+    { id: 'security', icon: Lock, title: t('settings.security'), desc: t('settings.securityDesc') },
   ];
 
   return (
@@ -44,14 +47,15 @@ const Settings: React.FC = () => {
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
             <SettingsIcon size={32} className="text-agri-green" />
-            Settings
+            {t('settings.title')}
           </h2>
-          <p className="text-slate-500 dark:text-white/40 font-medium">Configure your smart farm system</p>
+          <p className="text-slate-500 dark:text-white/40 font-medium">{t('settings.subtitle')}</p>
         </div>
         <StatusBadge status="healthy" label="System V1.0.4" />
       </div>
 
-      <SearchBar placeholder="Search settings..." className="max-w-md" />
+      <SearchBar placeholder={t('settings.searchPlaceholder')} className="max-w-md" />
+
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {settingSections.map((section) => (
@@ -70,13 +74,14 @@ const Settings: React.FC = () => {
         <section className="glass rounded-3xl p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
           <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
             <ShieldCheck size={20} className="text-[#1e9a4e]" />
-            Appearance & UI
+            {t('settings.appearance')}
           </h3>
           <div className="flex items-center justify-between py-4 border-b border-slate-100 dark:border-white/5">
             <div>
-              <p className="font-bold text-slate-800 dark:text-white">Dark Mode</p>
-              <p className="text-sm text-slate-400 dark:text-white/40">Toggle between dark and light themes</p>
+              <p className="font-bold text-slate-800 dark:text-white">{t('settings.darkMode')}</p>
+              <p className="text-sm text-slate-400 dark:text-white/40">{t('settings.darkModeDesc')}</p>
             </div>
+
             <button 
               onClick={toggleTheme}
               className="w-14 h-8 bg-black/10 dark:bg-white/10 rounded-full relative p-1 transition-colors"
@@ -95,12 +100,13 @@ const Settings: React.FC = () => {
         <section className="glass rounded-3xl p-8 border border-[#1e9a4e]/40 shadow-[0_0_20px_rgba(30,154,78,0.15)]">
           <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
             <Zap size={20} className="text-[#1e9a4e]" />
-            Sensor Thresholds
+            {t('settings.sensorThresholds')}
           </h3>
+
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Moisture ON Threshold (%)</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('settings.moistureOn')}</label>
                 <input 
                   type="number" 
                   value={localThresholds.moistureOn}
@@ -109,7 +115,7 @@ const Settings: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Moisture OFF Threshold (%)</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('settings.moistureOff')}</label>
                 <input 
                   type="number" 
                   value={localThresholds.moistureOff}
@@ -119,7 +125,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Min pH Level</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('settings.minPh')}</label>
                 <input 
                   type="number" 
                   step="0.1"
@@ -129,7 +135,7 @@ const Settings: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Max pH Level</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('settings.maxPh')}</label>
                 <input 
                   type="number" 
                   step="0.1"
@@ -139,7 +145,7 @@ const Settings: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Max TDS (ppm)</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{t('settings.maxTds')}</label>
                 <input 
                   type="number" 
                   value={localThresholds.tdsMax}
@@ -160,16 +166,17 @@ const Settings: React.FC = () => {
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white font-bold hover:bg-slate-200 dark:hover:bg-white/10 transition-all"
           >
             <RefreshCw size={20} />
-            Reset Defaults
+            {t('settings.resetDefaults')}
           </button>
           <button 
             onClick={handleSave}
             className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-agri-green text-white font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all"
           >
             <Save size={20} />
-            Save Changes
+            {t('settings.saveChanges')}
           </button>
         </div>
+
       </div>
     </div>
   );

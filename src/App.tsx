@@ -12,6 +12,7 @@ import { SensorProvider } from './context/SensorContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SidebarProvider } from './context/SidebarContext';
 import NotificationToast from './components/NotificationToast';
+import './i18n/config';
 
 function App() {
   return (
