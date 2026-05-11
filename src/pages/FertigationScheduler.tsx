@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -17,15 +17,6 @@ import {
 import { useSensors } from '../context/SensorContext';
 import { StatusBadge } from '../components/Common';
 import MotorStatusCard from '../components/MotorStatusCard';
-
-interface Schedule {
-  id: number;
-  name: string;
-  time: string;   // "HH:MM" 24-hr format
-  duration: number; // minutes
-  status: 'pending' | 'running' | 'completed';
-  timeLeft?: number; // seconds remaining when running
-}
 
 // ------ Custom Time Picker Component ------
 const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
@@ -73,7 +64,6 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               className="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl z-[70] p-4 flex gap-4 h-[240px]"
             >
-              {/* Hours Column */}
               <div className="flex-1 flex flex-col overflow-hidden">
                 <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">{t('fertigation.hours') || 'Hours'}</p>
                 <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
@@ -95,7 +85,6 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
 
               <div className="w-px bg-slate-100 dark:bg-white/5 my-4" />
 
-              {/* Minutes Column */}
               <div className="flex-1 flex flex-col overflow-hidden">
                 <p className="text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-widest mb-2 text-center">{t('fertigation.minutes') || 'Minutes'}</p>
                 <div className="flex-1 overflow-y-auto scrollbar-hide space-y-1 pr-1">
@@ -132,12 +121,10 @@ const CustomTimePicker = ({ value, onChange }: { value: string, onChange: (val: 
 
 const FertigationScheduler: React.FC = () => {
   const { t } = useTranslation();
-  const { data, toggleFertigation } = useSensors();
-
+  const { data, toggleFertigation, schedules, setSchedules } = useSensors();
 
   // ------ Active cycle countdown (tracks the running schedule) ------
   const [activeTimeLeft, setActiveTimeLeft] = useState(0);
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
 
   // ------ New Schedule modal state ------
   const [showModal, setShowModal]   = useState(false);
@@ -145,40 +132,7 @@ const FertigationScheduler: React.FC = () => {
   const [newTime, setNewTime]       = useState('');
   const [newDuration, setNewDuration] = useState('');
 
-  // Ref to prevent double-firing toggleFertigation
-  const motorFired = useRef(false);
-
-  // ---- Tick: check scheduled start times every second ----
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const hhmm = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-      setSchedules(prev => prev.map(s => {
-        if (s.status === 'pending' && s.time === hhmm) {
-          // Start this schedule
-          if (!data.fertigationMotor && !motorFired.current) {
-            motorFired.current = true;
-            toggleFertigation();
-          }
-          return { ...s, status: 'running', timeLeft: s.duration * 60 };
-        }
-        if (s.status === 'running' && s.timeLeft !== undefined) {
-          if (s.timeLeft <= 1) {
-            // Done — stop motor
-            if (data.fertigationMotor) toggleFertigation();
-            motorFired.current = false;
-            return { ...s, status: 'completed', timeLeft: 0 };
-          }
-          return { ...s, timeLeft: s.timeLeft - 1 };
-        }
-        return s;
-      }));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [data.fertigationMotor, toggleFertigation]);
-
-  // Sync activeTimeLeft to the running schedule
+  // Sync activeTimeLeft to the running schedule from context
   useEffect(() => {
     const running = schedules.find(s => s.status === 'running');
     setActiveTimeLeft(running?.timeLeft ?? 0);
@@ -235,7 +189,6 @@ const FertigationScheduler: React.FC = () => {
       <AnimatePresence>
         {showModal && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -244,7 +197,6 @@ const FertigationScheduler: React.FC = () => {
               onClick={() => setShowModal(false)}
             />
 
-            {/* Full-screen flex container to truly center the modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -253,7 +205,6 @@ const FertigationScheduler: React.FC = () => {
                 className="w-full max-w-md mx-4 pointer-events-auto"
               >
                 <div className="bg-white dark:bg-[#1a1a1a] rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border border-green-200 dark:border-green-500/30 shadow-2xl shadow-green-500/10">
-                {/* Modal Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 text-[#4caf50] flex items-center justify-center">
@@ -273,9 +224,7 @@ const FertigationScheduler: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Fields */}
                 <div className="space-y-5">
-                  {/* Cycle Name */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-white/40">
                       {t('fertigation.cycleName')} <span className="text-slate-300">{t('fertigation.optional')}</span>
@@ -289,7 +238,6 @@ const FertigationScheduler: React.FC = () => {
                     />
                   </div>
 
-                  {/* Start Time */}
                   <div className="space-y-2">
                     <CustomTimePicker
                       value={newTime}
@@ -298,10 +246,8 @@ const FertigationScheduler: React.FC = () => {
                     <p className="text-[10px] text-slate-400 dark:text-white/30">
                       {t('fertigation.startTimeHint')}
                     </p>
-
                   </div>
 
-                  {/* Duration */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-white/40">
                       {t('fertigation.duration')} <span className="text-red-400">*</span>
@@ -323,7 +269,6 @@ const FertigationScheduler: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Info box */}
                   {newTime && newDuration && (
                     <div className="flex items-start gap-3 p-4 bg-green-50 dark:bg-green-500/10 rounded-2xl border border-green-100 dark:border-green-500/20">
                       <FlaskConical size={16} className="text-[#4caf50] mt-0.5 shrink-0" />
@@ -335,7 +280,6 @@ const FertigationScheduler: React.FC = () => {
                   )}
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-3 mt-8">
                   <button
                     onClick={() => setShowModal(false)}
@@ -359,7 +303,6 @@ const FertigationScheduler: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* ============ HEADER ============ */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-3 text-slate-800 dark:text-white">
@@ -378,10 +321,7 @@ const FertigationScheduler: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* ============ LEFT ============ */}
         <div className="lg:col-span-2 space-y-8">
-
-          {/* Active Cycle Panel */}
           <div className="glass rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 border border-slate-100 dark:border-white/5 shadow-2xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden flex flex-col md:flex-row items-center gap-8 md:gap-12 min-h-[300px]">
             {totalRunning ? (
               <>
@@ -430,7 +370,6 @@ const FertigationScheduler: React.FC = () => {
             ) : (
               <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8 py-4">
                 <div className="relative w-32 h-32 md:w-48 md:h-48 flex items-center justify-center scale-90 md:scale-100">
-                  {/* High-end orbital animation */}
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -495,7 +434,6 @@ const FertigationScheduler: React.FC = () => {
             )}
           </div>
 
-          {/* Schedule List */}
           <div className="glass rounded-3xl p-8 border border-[#4caf50]/40 shadow-[0_0_20px_rgba(76,175,80,0.15)]">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-800 dark:text-white">
               <Clock size={20} className="text-slate-400" />
@@ -548,7 +486,6 @@ const FertigationScheduler: React.FC = () => {
           </div>
         </div>
 
-        {/* ============ RIGHT ============ */}
         <div className="space-y-6">
           <MotorStatusCard
             type="fertigation"
@@ -563,3 +500,4 @@ const FertigationScheduler: React.FC = () => {
 };
 
 export default FertigationScheduler;
+

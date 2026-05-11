@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { SensorData, Alert, SensorContextType, ActivityLog } from '../types/sensor';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import type { SensorData, Alert, SensorContextType, ActivityLog, Schedule } from '../types/sensor';
 
 const SensorContext = createContext<SensorContextType | undefined>(undefined);
 
@@ -25,6 +25,9 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     phMax: 7.5,
     tdsMax: 1200,
   });
+
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
+  const motorFired = useRef(false);
 
   const addAlert = useCallback((type: Alert['type'], message: string) => {
     const newAlert: Alert = {
@@ -72,15 +75,87 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [addAlert, addLog, thresholds]);
 
-  const toggleFertigation = useCallback(() => {
+  const toggleFertigation = useCallback((duration?: number) => {
     setData((prev) => {
       const newState = !prev.fertigationMotor;
+      
+      if (newState) {
+        // Starting motor: find last schedule duration or use provided
+        let targetDuration = duration;
+        if (!targetDuration) {
+          // Find last added schedule
+          if (schedules.length > 0) {
+            targetDuration = schedules[schedules.length - 1].duration;
+          } else {
+            targetDuration = 10; // Default fallback
+          }
+        }
+
+        setSchedules(prevS => {
+          // If there's an existing schedule, use its duration and mark as running
+          // Otherwise create a manual one
+          const last = prevS[prevS.length - 1];
+          if (last && last.status !== 'running') {
+            return prevS.map(s => s.id === last.id ? { ...s, status: 'running' as const, timeLeft: targetDuration! * 60 } : s);
+          } else if (!last || last.status === 'completed') {
+            return [...prevS, {
+              id: Date.now(),
+              name: 'Manual Cycle',
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+              duration: targetDuration!,
+              status: 'running',
+              timeLeft: targetDuration! * 60
+            }];
+          }
+          return prevS;
+        });
+      } else {
+        // Stopping motor
+        setSchedules(prevS => prevS.map(s => s.status === 'running' ? { ...s, status: 'completed' as const, timeLeft: 0 } : s));
+      }
+
       addLog('fertigation', newState ? 'START' : 'STOP');
       return { ...prev, fertigationMotor: newState };
     });
-  }, [addLog]);
+  }, [addLog, schedules]);
 
-  // Simulation loop
+  // Fertigation schedule & countdown tick
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const hhmm = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      setSchedules(prev => prev.map(s => {
+        // Auto-start based on time
+        if (s.status === 'pending' && s.time === hhmm) {
+          if (!data.fertigationMotor && !motorFired.current) {
+            motorFired.current = true;
+            setData(d => ({ ...d, fertigationMotor: true }));
+            addLog('fertigation', 'START');
+          }
+          return { ...s, status: 'running', timeLeft: s.duration * 60 };
+        }
+        
+        // Countdown
+        if (s.status === 'running' && s.timeLeft !== undefined) {
+          if (s.timeLeft <= 1) {
+            if (data.fertigationMotor) {
+              setData(d => ({ ...d, fertigationMotor: false }));
+              addLog('fertigation', 'STOP');
+            }
+            motorFired.current = false;
+            return { ...s, status: 'completed', timeLeft: 0 };
+          }
+          return { ...s, timeLeft: s.timeLeft - 1 };
+        }
+        return s;
+      }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [data.fertigationMotor, addLog]);
+
+  // Simulation loop (Sensor data)
   useEffect(() => {
     const interval = setInterval(() => {
       setData((prev) => {
@@ -111,7 +186,6 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           addAlert('error', `EMERGENCY SHUTDOWN: Abnormal pH detected (${newPh.toFixed(1)})!`);
           addLog('irrigation', 'STOP');
         } else if (!irrigationState && (newPh < thresholds.phMin || newPh > thresholds.phMax)) {
-          // Monitor even when motor is OFF
           addAlert('warning', `System Alert: Abnormal pH detected (${newPh.toFixed(1)})! Check sensor nodes.`);
         }
 
@@ -120,7 +194,6 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           addAlert('error', `EMERGENCY SHUTDOWN: High salinity detected (${newTds.toFixed(0)} ppm)!`);
           addLog('irrigation', 'STOP');
         } else if (!irrigationState && newTds > thresholds.tdsMax) {
-          // Monitor even when motor is OFF
           addAlert('warning', `System Alert: High TDS detected (${newTds.toFixed(0)} ppm)! Nutrient levels exceed safety threshold.`);
         }
 
@@ -153,6 +226,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toggleFertigation, 
       updateThresholds,
       toggleAutoMode,
+      schedules,
+      setSchedules,
     }}>
       {children}
     </SensorContext.Provider>
@@ -164,4 +239,5 @@ export const useSensors = () => {
   if (!context) throw new Error('useSensors must be used within SensorProvider');
   return context;
 };
+
 

@@ -21,6 +21,15 @@ export interface ActivityLog {
   timestamp: string;
 }
 
+export interface Schedule {
+  id: number;
+  name: string;
+  time: string;   // "HH:MM" 24-hr format
+  duration: number; // minutes
+  status: 'pending' | 'running' | 'completed';
+  timeLeft?: number; // seconds remaining when running
+}
+
 export interface SensorContextType {
   data: SensorData;
   alerts: Alert[];
@@ -38,7 +47,10 @@ export interface SensorContextType {
   emailAlerts: boolean;
   setEmailAlerts: (val: boolean) => void;
   toggleIrrigation: () => void;
-  toggleFertigation: () => void;
+  toggleFertigation: (duration?: number) => void;
   updateThresholds: (newThresholds: Partial<SensorContextType['thresholds']>) => void;
   toggleAutoMode: () => void;
+  schedules: Schedule[];
+  setSchedules: React.Dispatch<React.SetStateAction<Schedule[]>>;
 }
+
