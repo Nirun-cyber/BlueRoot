@@ -60,8 +60,11 @@
     "monitoringActive": "मॉनिटरिंग सक्रिय. अलीकडील कोणतीही हालचाल नाही.",
     "iotConnected": "IoT कनेक्टेड",
     "liveLabel": "लाईव्ह",
-    "thresholdExceeded": "मर्यादा ओलांडली"
+    "thresholdExceeded": "मर्यादा ओलांडली",
+    "criticalAlert": "गंभीर इशारा",
+    "systemNotification": "सिस्टम सूचना"
   },
+
 
   "irrigation": {
     "title": "सिंचन नियंत्रण",

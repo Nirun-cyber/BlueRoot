@@ -60,8 +60,11 @@
     "monitoringActive": "निगरानी सक्रिय। कोई हालिया गतिविधि नहीं।",
     "iotConnected": "IoT कनेक्टेड",
     "liveLabel": "लाइव",
-    "thresholdExceeded": "सीमा पार हो गई"
+    "thresholdExceeded": "सीमा पार हो गई",
+    "criticalAlert": "गंभीर अलर्ट",
+    "systemNotification": "सिस्टम अधिसूचना"
   },
+
 
   "irrigation": {
     "title": "सिंचाई नियंत्रण",

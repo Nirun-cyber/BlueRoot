@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, AlertCircle, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
 import { useSensors } from '../context/SensorContext';
 
 const NotificationToast: React.FC = () => {
+  const { t } = useTranslation();
   const { alerts, pushNotifications } = useSensors();
   const [currentToast, setCurrentToast] = useState<{ id: string; message: string; type: string } | null>(null);
   const [processedAlerts, setProcessedAlerts] = useState<Set<string>>(new Set());
@@ -53,7 +55,7 @@ const NotificationToast: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0 py-1">
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-white/40 mb-1">
-                {currentToast.type === 'error' ? 'Critical Alert' : 'System Notification'}
+                {currentToast.type === 'error' ? t('dashboard.criticalAlert') : t('dashboard.systemNotification')}
               </p>
               <p className="text-sm font-bold text-slate-800 dark:text-white leading-snug">
                 {currentToast.message}
@@ -73,3 +75,4 @@ const NotificationToast: React.FC = () => {
 };
 
 export default NotificationToast;
+

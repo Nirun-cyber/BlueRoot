@@ -61,8 +61,11 @@
     "liveSystemLog": "Live System Log",
     "monitoringActive": "Monitoring active. No recent activity.",
     "iotConnected": "IoT Connected",
-    "thresholdExceeded": "Threshold Exceeded"
+    "thresholdExceeded": "Threshold Exceeded",
+    "criticalAlert": "Critical Alert",
+    "systemNotification": "System Notification"
   },
+
 
   "irrigation": {
     "title": "Irrigation Control",
