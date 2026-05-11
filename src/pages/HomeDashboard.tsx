@@ -214,15 +214,28 @@ const HomeDashboard: React.FC = () => {
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="bg-slate-900/95 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl min-w-[140px]">
-                          <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-2 border-b border-white/10 pb-1">
+                        <div className="bg-[#0f172a] backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl min-w-[140px]">
+                          <p 
+                            className="text-[10px] font-black uppercase tracking-widest mb-2 border-b border-white/10 pb-1"
+                            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                          >
                             {label}
                           </p>
                           <div className="space-y-1.5">
                             {payload.map((item: any, index: number) => (
                               <div key={index} className="flex items-center justify-between gap-4">
-                                <span className="text-[11px] font-bold text-white/70">{item.name}:</span>
-                                <span className="text-sm font-black text-white">{item.value}</span>
+                                <span 
+                                  className="text-[11px] font-bold"
+                                  style={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                                >
+                                  {item.name}:
+                                </span>
+                                <span 
+                                  className="text-sm font-black"
+                                  style={{ color: '#ffffff' }}
+                                >
+                                  {item.value}
+                                </span>
                               </div>
                             ))}
                           </div>
