@@ -212,20 +212,50 @@ const HomeDashboard: React.FC = () => {
                 <YAxis stroke="rgba(0,0,0,0.15)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip
                   contentStyle={{
-                    background: 'rgba(15, 23, 42, 0.9)',
+                    background: 'rgba(15, 23, 42, 0.95)',
                     backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
                     borderRadius: '16px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                    color: '#f8fafc',
-                    fontSize: '12px',
-                    fontWeight: 600,
+                    boxShadow: '0 12px 48px rgba(0,0,0,0.5)',
+                    padding: '12px 16px',
                   }}
-                  itemStyle={{ color: '#cbd5e1' }}
-                  cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }}
+                  itemStyle={{ 
+                    color: '#ffffff',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    padding: '2px 0'
+                  }}
+                  labelStyle={{
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontWeight: 800,
+                    fontSize: '10px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    marginBottom: '8px'
+                  }}
+                  cursor={{ stroke: 'rgba(255, 255, 255, 0.2)', strokeWidth: 1.5 }}
                 />
-                <Area type="monotone" dataKey="moisture" stroke="#0073e6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorMoisture)" dot={false} />
-                <Area type="monotone" dataKey="ph" stroke="#4caf50" strokeWidth={2} fillOpacity={1} fill="url(#colorPh)" dot={false} yAxisId={0} />
+                <Area 
+                  name={t('dashboard.moisture')}
+                  type="monotone" 
+                  dataKey="moisture" 
+                  stroke="#0073e6" 
+                  strokeWidth={2.5} 
+                  fillOpacity={1} 
+                  fill="url(#colorMoisture)" 
+                  dot={false} 
+                />
+                <Area 
+                  name={t('dashboard.ph')}
+                  type="monotone" 
+                  dataKey="ph" 
+                  stroke="#4caf50" 
+                  strokeWidth={2} 
+                  fillOpacity={1} 
+                  fill="url(#colorPh)" 
+                  dot={false} 
+                  yAxisId={0} 
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
