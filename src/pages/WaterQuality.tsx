@@ -163,20 +163,43 @@ const WaterQuality: React.FC = () => {
                   <YAxis yAxisId="left" stroke="#00000020" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis yAxisId="right" orientation="right" stroke="#00000020" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    contentStyle={{ 
-                      background: 'rgba(15, 23, 42, 0.9)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '16px', 
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                      color: '#f8fafc',
-                      fontSize: '12px',
-                      fontWeight: 600
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-[#0f172a] backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl min-w-[140px]">
+                            <p 
+                              className="text-[10px] font-black uppercase tracking-widest mb-2 border-b border-white/10 pb-1"
+                              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                            >
+                              {label}
+                            </p>
+                            <div className="space-y-1.5">
+                              {payload.map((item: any, index: number) => (
+                                <div key={index} className="flex items-center justify-between gap-4">
+                                  <span 
+                                    className="text-[11px] font-bold"
+                                    style={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                                  >
+                                    {item.name}:
+                                  </span>
+                                  <span 
+                                    className="text-sm font-black"
+                                    style={{ color: '#ffffff' }}
+                                  >
+                                    {item.value}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
-                    itemStyle={{ color: '#cbd5e1' }}
                   />
-                  <Line yAxisId="left" type="monotone" dataKey="ph" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#a855f7' }} />
-                  <Line yAxisId="right" type="monotone" dataKey="tds" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6' }} />
+                  <Line name={t('dashboard.ph')} yAxisId="left" type="monotone" dataKey="ph" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#a855f7' }} />
+                  <Line name={t('dashboard.tds')} yAxisId="right" type="monotone" dataKey="tds" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6' }} />
+
                </LineChart>
             </ResponsiveContainer>
          </div>
