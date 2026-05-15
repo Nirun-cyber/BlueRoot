@@ -63,8 +63,14 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const newState = !prev;
       if (newState) {
         addAlert('info', 'Demo Mode Activated: Simulating critical scenario...');
-        // Force motor on for demo
-        setData(d => ({ ...d, irrigationMotor: true }));
+        // Force motor on and set values near thresholds for faster demo
+        setData(d => ({ 
+          ...d, 
+          irrigationMotor: true,
+          soilMoisture: 28, // Just above 25%
+          ph: 6.5,          // Just above 6.4
+          tds: 700          // Just below 750
+        }));
         addLog('irrigation', 'START');
       } else {
         addAlert('success', 'Demo Mode Deactivated. Resuming normal operations.');
@@ -179,9 +185,9 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
         if (isDemoMode) {
           // In demo mode, force values into critical zones to show alerts
-          newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + 0.1));
-          newPh = prev.ph + 0.05; // Rapidly rise to trigger pH alert (> 7.1)
-          newTds = prev.tds + 10; // Rapidly rise to trigger TDS alert (> 750)
+          newMoisture = Math.max(18, prev.soilMoisture - 0.8); // Rapidly drop to critical low (< 25%)
+          newPh = Math.max(6.0, prev.ph - 0.05); // Drop to critical low (< 6.4)
+          newTds = Math.min(850, prev.tds + 15); // Rapidly rise to critical high (> 750)
         } else {
           // Natural drift within user-defined ranges
           newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + (Math.random() * 0.4 - 0.2)));
@@ -189,7 +195,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           newTds = Math.max(500, Math.min(700, prev.tds + (Math.random() * 4 - 2)));
         }
 
-        let irrigationState = prev.irrigationMotor;
+        // Force motor state in demo mode, otherwise use normal logic
+        let irrigationState = isDemoMode ? true : prev.irrigationMotor;
 
         if (isAutoMode) {
           if (newMoisture < thresholds.moistureOn && !irrigationState) {
@@ -208,17 +215,25 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
 
         if (irrigationState && (newPh < thresholds.phMin || newPh > thresholds.phMax)) {
-          irrigationState = false;
-          addAlert('error', `EMERGENCY SHUTDOWN: Abnormal pH detected (${newPh.toFixed(1)})!`);
-          addLog('irrigation', 'STOP');
+          if (!isDemoMode) {
+            irrigationState = false;
+            addAlert('error', `EMERGENCY SHUTDOWN: Abnormal pH detected (${newPh.toFixed(1)})!`);
+            addLog('irrigation', 'STOP');
+          } else {
+            addAlert('error', `CRITICAL ALERT: Abnormal pH detected (${newPh.toFixed(1)})!`);
+          }
         } else if (!irrigationState && (newPh < thresholds.phMin || newPh > thresholds.phMax)) {
           addAlert('warning', `System Alert: Abnormal pH detected (${newPh.toFixed(1)})! Check sensor nodes.`);
         }
 
         if (irrigationState && newTds > thresholds.tdsMax) {
-          irrigationState = false;
-          addAlert('error', `EMERGENCY SHUTDOWN: High salinity detected (${newTds.toFixed(0)} ppm)!`);
-          addLog('irrigation', 'STOP');
+          if (!isDemoMode) {
+            irrigationState = false;
+            addAlert('error', `EMERGENCY SHUTDOWN: High salinity detected (${newTds.toFixed(0)} ppm)!`);
+            addLog('irrigation', 'STOP');
+          } else {
+            addAlert('error', `CRITICAL ALERT: High salinity detected (${newTds.toFixed(0)} ppm)!`);
+          }
         } else if (!irrigationState && newTds > thresholds.tdsMax) {
           addAlert('warning', `System Alert: High TDS detected (${newTds.toFixed(0)} ppm)! Nutrient levels exceed safety threshold.`);
         }
