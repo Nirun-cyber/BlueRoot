@@ -10,6 +10,7 @@ interface SensorCardProps {
   color: string;
   trend?: string;
   isWarning?: boolean;
+  thresholdLabel?: string;
 }
 
 // Animates a number from 0 → target on mount
@@ -36,7 +37,7 @@ function useCountUp(target: number, duration = 800) {
   return display;
 }
 
-const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon, color, trend, isWarning }) => {
+const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon, color, trend, isWarning, thresholdLabel }) => {
   const { t } = useTranslation();
   const numericValue = typeof value === 'number' ? value : parseFloat(value as string) || 0;
   const animated = useCountUp(numericValue, 900);
@@ -98,6 +99,13 @@ const SensorCard: React.FC<SensorCardProps> = ({ title, value, unit, icon: Icon,
           </motion.span>
           <span className="text-slate-400 dark:text-white/35 text-xs font-bold">{unit}</span>
         </div>
+        
+        {thresholdLabel && (
+          <p className="mt-2 text-[10px] font-bold text-slate-500 dark:text-white/25 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-white/10" />
+            {thresholdLabel}
+          </p>
+        )}
       </div>
 
       {isWarning && (

@@ -20,8 +20,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pushNotifications, setPushNotifications] = useState(true);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [thresholds, setThresholds] = useState<SensorContextType['thresholds']>({
-    moistureOn: 62,
-    moistureOff: 72,
+    moistureOn: 25,
+    moistureOff: 64,
     phMin: 6.4,
     phMax: 7.1,
     tdsMax: 750,

@@ -155,9 +155,36 @@ const HomeDashboard: React.FC = () => {
         className="grid grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {[
-          { title: t('dashboard.soilMoistureCard'), value: data.soilMoisture, unit: '%',     icon: Droplet,       color: 'text-blue-500 bg-blue-500/10',   trend: '-2.4%',  isWarning: data.soilMoisture < thresholds.moistureOn },
-          { title: t('dashboard.phLevel'),      value: data.ph,           unit: 'pH',    icon: FlaskConical,  color: 'text-purple-500 bg-purple-500/10', trend: '+0.1',  isWarning: data.ph < thresholds.phMin || data.ph > thresholds.phMax },
-          { title: t('dashboard.salinity'),value: data.tds,           unit: 'ppm',   icon: Waves,         color: 'text-amber-500 bg-amber-500/10', trend: '+12',    isWarning: data.tds > thresholds.tdsMax },
+          { 
+            title: t('dashboard.soilMoistureCard'), 
+            value: data.soilMoisture, 
+            unit: '%',     
+            icon: Droplet,       
+            color: 'text-blue-500 bg-blue-500/10',   
+            trend: '-2.4%',  
+            isWarning: data.soilMoisture < thresholds.moistureOn,
+            thresholdLabel: `${t('settings.moistureOn')}: ${thresholds.moistureOn}% - ${thresholds.moistureOff}%`
+          },
+          { 
+            title: t('dashboard.phLevel'),      
+            value: data.ph,           
+            unit: 'pH',    
+            icon: FlaskConical,  
+            color: 'text-purple-500 bg-purple-500/10', 
+            trend: '+0.1',  
+            isWarning: data.ph < thresholds.phMin || data.ph > thresholds.phMax,
+            thresholdLabel: `${t('settings.minPh')}: ${thresholds.phMin} - ${thresholds.phMax}`
+          },
+          { 
+            title: t('dashboard.salinity'),
+            value: data.tds,           
+            unit: 'ppm',   
+            icon: Waves,         
+            color: 'text-amber-500 bg-amber-500/10', 
+            trend: '+12',    
+            isWarning: data.tds > thresholds.tdsMax,
+            thresholdLabel: `${t('settings.maxTds')}: ${thresholds.tdsMax} ppm`
+          },
           { title: t('dashboard.recentAlerts'), value: alerts.length,     unit: t('dashboard.events'),icon: AlertTriangle, color: 'text-red-500 bg-red-500/10',    trend: undefined, isWarning: alerts.some(a => a.type === 'error') },
         ].map(card => (
 
