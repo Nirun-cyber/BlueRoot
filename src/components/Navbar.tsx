@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Activity, Menu } from 'lucide-react';
+import { Bell, Activity, Menu, Play, Square } from 'lucide-react';
 import { ThemeToggle } from './Common';
 import LanguageSelector from './LanguageSelector';
 import { useSidebar } from '../context/SidebarContext';
+import { useSensors } from '../context/SensorContext';
 import { useTranslation } from 'react-i18next';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
+  const { isDemoMode, toggleDemoMode } = useSensors();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -43,6 +45,18 @@ const Navbar: React.FC = () => {
           >
             <Bell size={20} />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#0a0a0a]"></span>
+          </button>
+
+          <button 
+            onClick={toggleDemoMode}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all duration-300 shadow-lg ${
+              isDemoMode 
+                ? 'bg-red-500 text-white shadow-red-500/20 hover:bg-red-600' 
+                : 'bg-gradient-to-r from-[#0073e6] to-[#005bb5] text-white shadow-blue-500/20 hover:scale-105 active:scale-95'
+            }`}
+          >
+            {isDemoMode ? <Square size={12} fill="white" /> : <Play size={12} fill="white" />}
+            {isDemoMode ? 'Stop Demo' : 'Start Demo'}
           </button>
           
           <LanguageSelector />

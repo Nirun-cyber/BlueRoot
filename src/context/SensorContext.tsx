@@ -16,6 +16,7 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [isAutoMode, setIsAutoMode] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [thresholds, setThresholds] = useState<SensorContextType['thresholds']>({
@@ -56,6 +57,21 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const toggleAutoMode = useCallback(() => {
     setIsAutoMode((prev) => !prev);
   }, []);
+
+  const toggleDemoMode = useCallback(() => {
+    setIsDemoMode((prev) => {
+      const newState = !prev;
+      if (newState) {
+        addAlert('info', 'Demo Mode Activated: Simulating critical scenario...');
+        // Force motor on for demo
+        setData(d => ({ ...d, irrigationMotor: true }));
+        addLog('irrigation', 'START');
+      } else {
+        addAlert('success', 'Demo Mode Deactivated. Resuming normal operations.');
+      }
+      return newState;
+    });
+  }, [addAlert, addLog]);
 
   const toggleIrrigation = useCallback(() => {
     setData((prev) => {
@@ -159,10 +175,19 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const interval = setInterval(() => {
       setData((prev) => {
-        // Natural drift within user-defined ranges
-        const newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + (Math.random() * 0.4 - 0.2)));
-        const newPh = Math.max(6.5, Math.min(7, prev.ph + (Math.random() * 0.02 - 0.01)));
-        const newTds = Math.max(500, Math.min(700, prev.tds + (Math.random() * 4 - 2)));
+        let newMoisture, newPh, newTds;
+
+        if (isDemoMode) {
+          // In demo mode, force values into critical zones to show alerts
+          newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + 0.1));
+          newPh = prev.ph + 0.05; // Rapidly rise to trigger pH alert (> 7.1)
+          newTds = prev.tds + 10; // Rapidly rise to trigger TDS alert (> 750)
+        } else {
+          // Natural drift within user-defined ranges
+          newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + (Math.random() * 0.4 - 0.2)));
+          newPh = Math.max(6.5, Math.min(7, prev.ph + (Math.random() * 0.02 - 0.01)));
+          newTds = Math.max(500, Math.min(700, prev.tds + (Math.random() * 4 - 2)));
+        }
 
         let irrigationState = prev.irrigationMotor;
 
@@ -219,6 +244,8 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       logs,
       thresholds, 
       isAutoMode,
+      isDemoMode,
+      toggleDemoMode,
       pushNotifications,
       setPushNotifications,
       emailAlerts,

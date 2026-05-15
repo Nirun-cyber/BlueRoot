@@ -42,6 +42,8 @@ export interface SensorContextType {
     tdsMax: number;
   };
   isAutoMode: boolean;
+  isDemoMode: boolean;
+  toggleDemoMode: () => void;
   pushNotifications: boolean;
   setPushNotifications: (val: boolean) => void;
   emailAlerts: boolean;
