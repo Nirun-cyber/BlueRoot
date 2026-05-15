@@ -5,9 +5,9 @@ const SensorContext = createContext<SensorContextType | undefined>(undefined);
 
 export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<SensorData>({
-    soilMoisture: 45,
-    ph: 6.8,
-    tds: 750,
+    soilMoisture: 68.5,
+    ph: 6.7,
+    tds: 580,
     irrigationMotor: false,
     fertigationMotor: false,
     lastUpdate: new Date().toLocaleTimeString(),
@@ -19,11 +19,11 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pushNotifications, setPushNotifications] = useState(true);
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [thresholds, setThresholds] = useState<SensorContextType['thresholds']>({
-    moistureOn: 30,
-    moistureOff: 80,
-    phMin: 6.0,
-    phMax: 7.5,
-    tdsMax: 1200,
+    moistureOn: 62,
+    moistureOff: 72,
+    phMin: 6.4,
+    phMax: 7.1,
+    tdsMax: 750,
   });
 
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -159,9 +159,10 @@ export const SensorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const interval = setInterval(() => {
       setData((prev) => {
-        const newMoisture = Math.max(0, Math.min(100, prev.soilMoisture + (Math.random() * 2 - 1.1)));
-        const newPh = Math.max(0, Math.min(14, prev.ph + (Math.random() * 0.1 - 0.05)));
-        const newTds = Math.max(100, Math.min(2000, prev.tds + (Math.random() * 10 - 5)));
+        // Natural drift within user-defined ranges
+        const newMoisture = Math.max(60, Math.min(75, prev.soilMoisture + (Math.random() * 0.4 - 0.2)));
+        const newPh = Math.max(6.5, Math.min(7, prev.ph + (Math.random() * 0.02 - 0.01)));
+        const newTds = Math.max(500, Math.min(700, prev.tds + (Math.random() * 4 - 2)));
 
         let irrigationState = prev.irrigationMotor;
 

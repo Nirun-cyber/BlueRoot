@@ -26,13 +26,13 @@ import MotorStatusCard from '../components/MotorStatusCard';
 import { useSensors } from '../context/SensorContext';
 
 const mockChartData = [
-  { time: '08:00', moisture: 42, ph: 6.8, tds: 750 },
-  { time: '09:00', moisture: 40, ph: 6.7, tds: 760 },
-  { time: '10:00', moisture: 38, ph: 6.9, tds: 740 },
-  { time: '11:00', moisture: 35, ph: 6.8, tds: 755 },
-  { time: '12:00', moisture: 32, ph: 6.7, tds: 770 },
-  { time: '13:00', moisture: 45, ph: 6.8, tds: 765 },
-  { time: '14:00', moisture: 48, ph: 6.9, tds: 750 },
+  { time: '08:00', moisture: 68, ph: 6.7, tds: 580 },
+  { time: '09:00', moisture: 70, ph: 6.8, tds: 590 },
+  { time: '10:00', moisture: 72, ph: 6.7, tds: 600 },
+  { time: '11:00', moisture: 65, ph: 6.6, tds: 610 },
+  { time: '12:00', moisture: 63, ph: 6.7, tds: 620 },
+  { time: '13:00', moisture: 68, ph: 6.8, tds: 615 },
+  { time: '14:00', moisture: 71, ph: 6.9, tds: 605 },
 ];
 
 // Stagger container variants
